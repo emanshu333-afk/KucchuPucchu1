@@ -15,9 +15,16 @@ django-allauth>=64.0.0
 # Async & Background Tasks
 celery>=5.4.0
 redis>=5.2.0
+django-celery-beat>=2.5.0
+
+# Production server / static files
+gunicorn>=22.0.0
+whitenoise>=6.6.0
 
 # AI/ML - Updated for Python 3.14
 openai>=1.50.0
+google-generativeai>=0.7.0
+anthropic>=0.25.0
 numpy>=2.0.0
 pandas>=2.2.0
 scikit-learn>=1.5.0

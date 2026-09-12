@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - PrepPilot{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="jumbotron bg-light p-5 rounded">
+                <h1 class="display-4">Welcome to PrepPilot</h1>
+                <p class="lead">AI-Powered Exam Preparation System</p>
+                <hr class="my-4">
+                <p>Your intelligent study companion for mastering any exam.</p>
+                <div class="btn-group" role="group">
+                    <a class="btn btn-primary btn-lg me-2" href="/api/docs/" role="button">API Documentation</a>
+                    <a class="btn btn-secondary btn-lg" href="/admin/" role="button">Admin Panel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-book me-2"></i>Study Plans</h5>
+                    <p class="card-text">AI-generated personalized study plans tailored to your exam.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-pencil-square me-2"></i>Mock Tests</h5>
+                    <p class="card-text">Practice with comprehensive mock exams and track your progress.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-graph-up me-2"></i>Analytics</h5>
+                    <p class="card-text">Track your readiness score and identify weak areas.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h2>API Endpoints</h2>
+            <p>Access PrepPilot through our REST API:</p>
+            <ul>
+                <li><code>/api/v1/auth/</code> - Authentication endpoints</li>
+                <li><code>/api/v1/exams/</code> - Exam management</li>
+                <li><code>/api/v1/study/</code> - Study planning</li>
+                <li><code>/api/v1/analytics/</code> - Analytics data</li>
+                <li><code>/api/docs/</code> - Swagger documentation</li>
+                <li><code>/admin/</code> - Django admin panel</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

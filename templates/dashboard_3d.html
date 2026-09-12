@@ -1,0 +1,367 @@
+{% extends 'base_3d.html' %}
+{% load static %}
+
+{% block title %}Dashboard - PrepPilot{% endblock %}
+
+{% block extra_css %}
+<style>
+  .hero-section { min-height: 100vh; display: flex; align-items: center; }
+  .stat-number { font-size: 3rem; font-weight: 700; background: linear-gradient(135deg, var(--accent-400), var(--amber-400)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .exam-card { transition: all 0.3s ease; }
+  .exam-card:hover { transform: translateY(-4px); }
+  .block-card { transition: all 0.3s ease; }
+  .block-card:hover { transform: translateX(4px); }
+  .priority-bar { height: 4px; border-radius: 2px; background: var(--ink-700); overflow: hidden; }
+  .priority-fill { height: 100%; border-radius: 2px; transition: width 1s cubic-bezier(0.16, 1, 0.3, 1); }
+  .readiness-ring { transform: rotate(-90deg); }
+  .readiness-ring circle { transition: stroke-dashoffset 1s cubic-bezier(0.16, 1, 0.3, 1); }
+  .floating-action { position: fixed; bottom: 24px; right: 24px; z-index: 100; }
+  .nav-indicator { position: absolute; bottom: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--accent-500), var(--amber-500)); border-radius: 3px 3px 0 0; transition: all 0.3s ease; }
+  .glass-panel { background: rgba(15, 23, 42, 0.6); border: 1px solid var(--ink-700); backdrop-filter: blur(20px); }
+  .progress-step { position: relative; }
+  .progress-step::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: var(--ink-700); z-index: 0; }
+  .progress-step.active::before { background: linear-gradient(90deg, var(--accent-500), var(--amber-500)); }
+  .progress-step.completed::before { background: var(--accent-500); }
+  .quick-action-btn { transition: all 0.2s; }
+  .quick-action-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(20, 184, 166, 0.2); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="app" class="relative z-10 min-h-screen">
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-3 text-xl font-bold text-ink-100" data-hover>
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-500 to-amber-500 flex items-center justify-center">
+          <i class="bi bi-mortarboard-fill text-white text-xl"></i>
+        </div>
+        <span class="hidden sm:block">PrepPilot</span>
+      </a>
+      
+      <div class="hidden md:flex items-center gap-1 bg-ink-900/50 rounded-xl p-1 border border-ink-700">
+        <a href="#dashboard" class="nav-link active px-4 py-2" data-section="dashboard">Dashboard</a>
+        <a href="#exams" class="nav-link px-4 py-2" data-section="exams">Exams</a>
+        <a href="#study" class="nav-link px-4 py-2" data-section="study">Study Plan</a>
+        <a href="#analytics" class="nav-link px-4 py-2" data-section="analytics">Analytics</a>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <button class="btn-ghost p-2 rounded-lg" data-hover title="Notifications">
+          <i class="bi bi-bell text-ink-400 text-xl"></i>
+          <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-xs rounded-full flex items-center justify-center hidden">3</span>
+        </button>
+        <div class="w-px h-6 bg-ink-700 mx-2"></div>
+        <div class="flex items-center gap-3 pl-3 border-l border-ink-700">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-accent-500 to-amber-500 flex items-center justify-center">
+            <span class="text-white text-sm font-medium">E</span>
+          </div>
+          <div class="hidden sm:block text-left">
+            <p class="text-ink-100 font-medium text-sm">Eman</p>
+            <p class="text-ink-500 text-xs">Student</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section relative px-6" id="dashboard">
+    <div class="container mx-auto max-w-7xl">
+      <div class="grid lg:grid-cols-3 gap-8 mb-12">
+        <div class="lg:col-span-2">
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 entrance-animation">
+            Your Exam <span class="bg-gradient-to-r from-accent-400 to-amber-400 bg-clip-text text-transparent">Strategy Engine</span>
+          </h1>
+          <p class="text-ink-400 text-lg mb-8 entrance-animation stagger-1 max-w-xl">
+            Dynamic AI-powered preparation that adapts to your progress. Not just a timetable — a living strategy.
+          </p>
+          <div class="flex flex-wrap gap-3 entrance-animation stagger-2">
+            <button class="btn btn-primary px-6 py-3" onclick="navigateTo('exams')">
+              <i class="bi bi-plus-circle me-2"></i>Add New Exam
+            </button>
+            <button class="btn btn-secondary px-6 py-3" onclick="navigateTo('study')">
+              <i class="bi bi-calendar-check me-2"></i>View Today's Plan
+            </button>
+            <button class="btn btn-ghost px-6 py-3" onclick="navigateTo('analytics')">
+              <i class="bi bi-graph-up me-2"></i>Check Readiness
+            </button>
+          </div>
+        </div>
+        
+        <div class="entrance-animation stagger-3">
+          <div class="glass-panel rounded-2xl p-6 h-full min-h-[300px] flex flex-col justify-between">
+            <div>
+              <p class="text-ink-500 text-sm mb-2">Next Exam</p>
+              <h2 class="text-2xl font-bold text-ink-100 mb-1">JEE Advanced 2024</h2>
+              <p class="text-ink-400 text-sm">May 15, 2024 • 67 days left</p>
+            </div>
+            <div class="pt-4 border-t border-ink-700">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-ink-400 text-sm">Overall Readiness</span>
+                <span class="text-2xl font-bold text-accent-400">68%</span>
+              </div>
+              <svg class="w-full h-16 readiness-ring" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="var(--ink-700)" stroke-width="8"/>
+                <circle class="readiness-ring-fill" cx="50" cy="50" r="45" fill="none" stroke="url(#readinessGradient)" stroke-width="8" stroke-linecap="round" stroke-dasharray="282.7" stroke-dashoffset="90"/>
+                <defs>
+                  <linearGradient id="readinessGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="var(--accent-500)"/>
+                    <stop offset="100%" stop-color="var(--amber-500)"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+        {% for stat in stats %}
+        <div class="stat-card card p-6 entrance-animation stagger-{{ forloop.counter }}" style="animation-delay: {{ forloop.counter|add:'3' }}00ms;">
+          <p class="text-ink-500 text-sm mb-1">{{ stat.label }}</p>
+          <p class="stat-number">{{ stat.value }}</p>
+          <p class="text-ink-500 text-xs mt-2">{{ stat.change }}</p>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Today's Study Plan -->
+      <div class="mb-12">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold">Today's Study Plan</h2>
+          <a href="#study" class="btn-ghost text-sm">View Full Schedule →</a>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {% for block in today_blocks %}
+          <div class="block-card card p-5 border-l-4 {% if block.priority == 'must' %}border-red-500{% elif block.priority == 'should' %}border-amber-500{% else %}border-accent-500{% endif %} group">
+            <div class="flex items-start justify-between mb-3">
+              <span class="topic-tag {% if block.priority == 'must' %}must{% elif block.priority == 'should' %}should{% else %}if-time{% endif %}">
+                {{ block.priority|upper }}
+              </span>
+              <span class="text-ink-500 text-sm font-mono">{{ block.time }}</span>
+            </div>
+            <h3 class="font-bold text-lg mb-1">{{ block.topic }}</h3>
+            <p class="text-ink-500 text-sm mb-4">{{ block.subject }}</p>
+            <div class="flex items-center gap-2 text-sm text-ink-500">
+              <span class="flex items-center gap-1"><i class="bi bi-clock"></i>{{ block.duration }}</span>
+              <span class="flex items-center gap-1"><i class="bi bi-book"></i>{{ block.type }}</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-ink-700 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
+              <button class="btn btn-primary btn-sm px-4 py-2">Start</button>
+              <button class="btn btn-ghost btn-sm px-3 py-2"><i class="bi bi-three-dots"></i></button>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Exams Overview -->
+      <section id="exams" class="mb-12">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold">Your Exams</h2>
+          <button class="btn btn-primary btn-sm" onclick="navigateTo('exams')">
+            <i class="bi bi-plus me-1"></i>Add Exam
+          </button>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {% for exam in exams %}
+          <div class="exam-card card p-6 group">
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <span class="text-xs font-medium px-2 py-1 rounded-full bg-ink-700 text-ink-400 mb-2 inline-block">{{ exam.type }}</span>
+                <h3 class="text-xl font-bold">{{ exam.name }}</h3>
+              </div>
+              <div class="text-right">
+                <p class="text-3xl font-bold text-accent-400">{{ exam.days_left }}</p>
+                <p class="text-ink-500 text-sm">days left</p>
+              </div>
+            </div>
+            <div class="mb-4">
+              <div class="flex justify-between text-sm mb-1">
+                <span class="text-ink-400">Readiness</span>
+                <span class="font-bold text-accent-400">{{ exam.readiness }}%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ exam.readiness }}%"></div>
+              </div>
+            </div>
+            <div class="grid grid-cols-3 gap-4 mb-4">
+              <div class="text-center p-3 bg-ink-900/50 rounded-xl">
+                <p class="text-2xl font-bold text-ink-100">{{ exam.subjects_count }}</p>
+                <p class="text-ink-500 text-xs">Subjects</p>
+              </div>
+              <div class="text-center p-3 bg-ink-900/50 rounded-xl">
+                <p class="text-2xl font-bold text-ink-100">{{ exam.topics_count }}</p>
+                <p class="text-ink-500 text-xs">Topics</p>
+              </div>
+              <div class="text-center p-3 bg-ink-900/50 rounded-xl">
+                <p class="text-2xl font-bold text-ink-100">{{ exam.mocks_count }}</p>
+                <p class="text-ink-500 text-xs">Mocks</p>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button class="btn btn-primary flex-1 text-sm">Open Plan</button>
+              <button class="btn btn-secondary px-4"><i class="bi bi-graph-up"></i></button>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+
+      <!-- Quick Actions -->
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold mb-6">Quick Actions</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <button class="quick-action-btn card p-6 text-left group" onclick="navigateTo('study')">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <i class="bi bi-play-circle-fill text-white text-2xl"></i>
+            </div>
+            <h3 class="font-bold mb-1">Start Study Session</h3>
+            <p class="text-ink-500 text-sm">Begin today's first block</p>
+          </button>
+          <button class="quick-action-btn card p-6 text-left group" onclick="navigateTo('exams')">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <i class="bi bi-journal-plus text-white text-2xl"></i>
+            </div>
+            <h3 class="font-bold mb-1">Add New Exam</h3>
+            <p class="text-ink-500 text-sm">Set up a new target</p>
+          </button>
+          <button class="quick-action-btn card p-6 text-left group" onclick="showToast('What-if simulator coming soon!', 'info')">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <i class="bi bi-question-circle text-white text-2xl"></i>
+            </div>
+            <h3 class="font-bold mb-1">Run What-If</h3>
+            <p class="text-ink-500 text-sm">Test schedule scenarios</p>
+          </button>
+          <button class="quick-action-btn card p-6 text-left group" onclick="showToast('Recovery check complete. You\'re on track!', 'success')">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <i class="bi bi-arrow-clockwise text-white text-2xl"></i>
+            </div>
+            <h3 class="font-bold mb-1">Check Recovery</h3>
+            <p class="text-ink-500 text-sm">Analyze progress gaps</p>
+          </button>
+        </div>
+      </section>
+
+      <!-- Readiness Breakdown -->
+      <section id="analytics" class="mb-12">
+        <h2 class="text-2xl font-bold mb-6">Readiness Breakdown</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {% for metric in readiness %}
+          <div class="card p-6 text-center entrance-animation stagger-{{ forloop.counter }}">
+            <div class="w-20 h-20 mx-auto mb-4 relative">
+              <svg class="w-20 h-20 readiness-ring" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="var(--ink-700)" stroke-width="8"/>
+                <circle class="readiness-ring-fill" cx="50" cy="50" r="45" fill="none" stroke="{{ metric.color }}" stroke-width="8" stroke-linecap="round" stroke-dasharray="282.7" stroke-dashoffset="{{ metric.offset }}"/>
+              </svg>
+              <span class="absolute inset-0 flex items-center justify-center text-2xl font-bold">{{ metric.value }}%</span>
+            </div>
+            <h3 class="font-bold mb-1">{{ metric.label }}</h3>
+            <p class="text-ink-500 text-sm">{{ metric.desc }}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- Floating Action Button -->
+  <button class="floating-action btn btn-primary p-4 rounded-full shadow-2xl" onclick="showToast('Quick add coming soon!', 'info')" data-hover>
+    <i class="bi bi-plus text-2xl"></i>
+  </button>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Initialize dashboard interactions
+  document.addEventListener('DOMContentLoaded', () => {
+    // Nav link handling
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+        const section = link.dataset.section;
+        if (window.prepPilot3D) {
+          window.prepPilot3D.onSectionChange(section);
+        }
+        const target = document.getElementById(section);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('navbar');
+      if (navbar) {
+        navbar.classList.toggle('scrolled', window.scrollY > 20);
+      }
+    });
+
+    // Animate readiness rings on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const circles = entry.target.querySelectorAll('.readiness-ring-fill');
+          circles.forEach(circle => {
+            const offset = circle.style.strokeDashoffset;
+            circle.style.strokeDashoffset = '282.7';
+            setTimeout(() => {
+              circle.style.strokeDashoffset = offset;
+            }, 100);
+          });
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('.readiness-ring').forEach(el => observer.observe(el));
+
+    // Stagger animation for cards
+    const cardObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationDelay = `${i * 100}ms`;
+          entry.target.classList.add('entrance-animation');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.exam-card, .block-card, .stat-card').forEach(el => cardObserver.observe(el));
+
+    // Quick action buttons
+    document.querySelectorAll('.quick-action-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.style.transform = 'scale(0.95)';
+        setTimeout(() => btn.style.transform = '', 150);
+      });
+    });
+
+    // Initialize progress rings
+    document.querySelectorAll('.readiness-ring-fill').forEach(circle => {
+      const percent = circle.parentElement.querySelector('span')?.textContent?.replace('%', '') || 0;
+      const offset = 282.7 * (1 - percent / 100);
+      circle.style.strokeDashoffset = offset;
+    });
+  });
+
+  // Global navigate function
+  function navigateTo(section) {
+    const target = document.getElementById(section);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+      document.querySelectorAll('.nav-link').forEach(l => {
+        l.classList.toggle('active', l.dataset.section === section);
+      });
+    }
+    if (window.prepPilot3D) {
+      window.prepPilot3D.onSectionChange(section);
+    }
+  }
+</script>
+{% endblock %}

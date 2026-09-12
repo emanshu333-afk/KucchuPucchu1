@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PrepPilot - Dynamic Exam Preparation System">
+    <title>{% block title %}PrepPilot - Your Exam Strategy Engine{% endblock %}</title>
+    
+    <!-- Preload critical assets -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Fonts -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Three.js and GSAP via CDN -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"
+        }
+    }
+    </script>
+    
+    <!-- Tailwind CSS for utility classes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'display': ['Space Grotesk', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        'ink': {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                            950: '#020617',
+                        },
+                        'accent': {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                        },
+                        'amber': {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            200: '#fde68a',
+                            300: '#fcd34d',
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                            800: '#92400e',
+                            900: '#78350f',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="{% static 'css/style_3d.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="font-display antialiased">
+    <!-- Custom Cursor -->
+    <div class="cursor-wrapper" aria-hidden="true">
+        <div class="cursor-dot"></div>
+        <div class="cursor-ring"></div>
+        <div class="cursor-trail" data-trail-count="8"></div>
+    </div>
+    
+    <!-- Three.js Canvas Container -->
+    <div id="three-canvas" class="fixed inset-0 -z-10" aria-hidden="true"></div>
+    
+    <!-- Atmospheric Layers -->
+    <div class="atmosphere-layers fixed inset-0 -z-10" aria-hidden="true">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+        <div class="noise-overlay"></div>
+        <div class="vignette"></div>
+    </div>
+    
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 flex items-center justify-center z-50 bg-ink-950" role="status" aria-label="Loading PrepPilot">
+        <div class="text-center">
+            <div class="loading-logo mb-6">
+                <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="40" cy="40" r="36" stroke="url(#grad)" stroke-width="3" stroke-linecap="round">
+                        <animate attributeName="stroke-dasharray" dur="2s" values="0 226; 226 0; 226 0" repeatCount="indefinite"/>
+                        <animate attributeName="stroke-dashoffset" dur="2s" values="0; -226; -452" repeatCount="indefinite"/>
+                    </circle>
+                    <defs>
+                        <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#14b8a6"/>
+                            <stop offset="100%" stop-color="#f59e0b"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <p class="text-ink-400 text-sm font-mono tracking-widest uppercase">Initializing Study Environment</p>
+            <div class="loading-bar mt-6 w-64 mx-auto h-1 bg-ink-800 rounded-full overflow-hidden">
+                <div class="loading-progress h-full bg-gradient-to-r from-accent-500 to-amber-500 rounded-full" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main App Container -->
+    <div id="app" class="relative z-10 min-h-screen opacity-0 transition-opacity duration-500">
+        {% block content %}{% endblock %}
+    </div>
+    
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3" aria-live="polite"></div>
+    
+    <!-- GSAP -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollToPlugin.min.js"></script>
+    
+    <!-- Main App Script -->
+    <script type="module" src="{% static 'js/app_3d.js' %}"></script>
+    
+    {% block extra_js %}{% endblock %}
+    
+    <!-- CSRF Token for AJAX -->
+    <script>
+        window.CSRF_TOKEN = '{{ csrf_token }}';
+        window.API_BASE = '/api/v1';
+        window.USER_ID = '{{ request.user.id|default:"" }}';
+    </script>
+</body>
+</html>

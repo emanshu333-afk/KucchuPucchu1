@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrepPilot | Daily Pilot Planner &amp; Day-Wise Preparation Cockpit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/pilot-planner.css">
+</head>
+<body class="planner-page-body">
+
+  <!-- 1. Top Navigation Bar -->
+  <header class="planner-header">
+    <div class="planner-header-inner">
+      <div class="planner-brand-group">
+        <a href="dashboard.html" class="planner-brand-link" title="Return to Cockpit Dashboard">
+          <div class="planner-brand-icon">✈️</div>
+          <span class="planner-brand-name">PrepPilot</span>
+        </a>
+        <div class="planner-mission-badge">
+          <span>🗓️</span>
+          <span>Daily Flight Planner Active</span>
+        </div>
+      </div>
+
+      <div class="planner-nav-actions">
+        <a href="dashboard.html" class="btn-nav-return" id="nav-btn-dashboard">
+          <span>← Cockpit Dashboard</span>
+        </a>
+        <a href="download-kit.html" class="btn-nav-kit" id="nav-btn-download-kit" title="Open complete mission download kit">
+          <span>📦 Mission Download Kit</span>
+        </a>
+        <div class="planner-user-pill">
+          <div class="planner-avatar" id="planner-avatar-initials">AS</div>
+          <span id="planner-avatar-name">Arjun</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 2. Main Planner Workspace -->
+  <main class="planner-main-container">
+
+    <!-- Mission Roadmap Hero Banner -->
+    <section class="planner-hero-card">
+      <div class="planner-hero-top">
+        <div class="planner-hero-title-group">
+          <div class="planner-subject-avatar" id="planner-subject-icon">🎯</div>
+          <div>
+            <div class="planner-roadmap-tag">PrepPilot Day-Wise Study Roadmap</div>
+            <h1 class="planner-hero-title" id="planner-subject-title">Subject Flight Preparation Planner</h1>
+            <p class="planner-hero-subtitle">
+              <span>Structured day-by-day lectures, notes, practice problems &amp; checkpoint tests</span>
+              <span class="planner-meta-badge highlight-purple" id="planner-class-badge">Class 10th</span>
+              <span class="planner-meta-badge highlight-blue" id="planner-exam-date-badge">🗓️ Exam: Tomorrow</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="planner-hero-actions">
+          <button type="button" class="btn-download-full-pack" id="btn-download-full-curriculum">
+            <span>⚡ Download Complete Flight Pack (.ZIP)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Metrics Bar -->
+      <div class="planner-stats-bar">
+        <div class="planner-stat-box">
+          <span class="stat-label">Planner Scope</span>
+          <span class="stat-value highlight-cyan" id="stat-scope-val">Till Day Before Exam</span>
+        </div>
+        <div class="planner-stat-box">
+          <span class="stat-label">Total Prep Days</span>
+          <span class="stat-value" id="stat-total-days-val">0 Days</span>
+        </div>
+        <div class="planner-stat-box">
+          <span class="stat-label">Target Chapters</span>
+          <span class="stat-value" id="stat-chapters-count-val">0 Chapters</span>
+        </div>
+        <div class="planner-stat-box">
+          <span class="stat-label">Flight Readiness</span>
+          <span class="stat-value highlight-green" id="stat-readiness-val">0%</span>
+        </div>
+      </div>
+
+      <!-- Overall Readiness Progress Rail -->
+      <div class="planner-progress-rail-wrap">
+        <div class="progress-info-row">
+          <span class="progress-label">Overall Mission Completion Status:</span>
+          <span class="progress-percentage-label" id="progress-percentage-text">0 of 0 tasks completed (0%)</span>
+        </div>
+        <div class="planner-progress-track">
+          <div class="planner-progress-fill" id="planner-progress-fill" style="width: 0%;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Day Selector Timeline Scroller -->
+    <section class="planner-timeline-section">
+      <div class="timeline-header">
+        <h2 class="timeline-title">📅 Preparation Timeline (Day 1 to Exam Eve)</h2>
+        <span class="timeline-sub" id="timeline-sub-text">Click any day to access its study materials and tasks</span>
+      </div>
+
+      <div class="day-tabs-scroller" id="day-tabs-container">
+        <!-- Dynamic Day Pill Tabs injected by JS -->
+      </div>
+    </section>
+
+    <!-- 4. Active Day Preparation Canvas -->
+    <section class="active-day-canvas" id="active-day-canvas">
+
+      <!-- Day Header Banner -->
+      <div class="day-canvas-header">
+        <div class="day-canvas-info">
+          <div class="day-badge-row">
+            <span class="day-number-badge" id="active-day-num-badge">Day 1</span>
+            <span class="day-date-tag" id="active-day-date-tag">Today</span>
+            <span class="day-status-pill" id="active-day-status-pill">In Progress</span>
+          </div>
+          <h2 class="day-canvas-title" id="active-day-title">Day 1: Concept Launch &amp; Core Practice</h2>
+          <div class="day-chapters-scope" id="active-day-chapters-scope">
+            <!-- Target chapter chips for this day -->
+          </div>
+        </div>
+
+        <div class="day-canvas-actions">
+          <button type="button" class="btn-download-day-bundle" id="btn-download-day-bundle">
+            <span>📦 Download All Day Materials (.ZIP)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 Core Daily Modules Grid -->
+      <div class="daily-modules-grid">
+
+        <!-- Module 1: Masterclass Lectures -->
+        <article class="module-card card-lectures">
+          <div class="module-card-head">
+            <div class="module-icon-wrap icon-lecture">🎥</div>
+            <div class="module-title-wrap">
+              <span class="module-cat-tag">Video &amp; Audio Sessions</span>
+              <h3 class="module-title">Masterclass Lectures</h3>
+            </div>
+            <label class="task-checkbox-label" title="Mark lectures completed">
+              <input type="checkbox" class="task-toggle" data-module="lectures" id="task-chk-lectures">
+              <span class="custom-chk">✓</span>
+            </label>
+          </div>
+
+          <p class="module-desc" id="mod-lecture-desc">
+            In-depth concept lectures, live problem derivations, and high-frequency exam traps explained by master educators.
+          </p>
+
+          <div class="module-contents-list" id="mod-lecture-items">
+            <!-- Dynamic lecture rows -->
+          </div>
+
+          <div class="module-actions-row">
+            <button type="button" class="btn-module-download" id="btn-download-lectures">
+              <span>📥 Download Lecture Pack (.ZIP)</span>
+            </button>
+            <button type="button" class="btn-module-stream" id="btn-stream-lecture">
+              <span>▶️ Watch Online</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- Module 2: Revision Notes -->
+        <article class="module-card card-notes">
+          <div class="module-card-head">
+            <div class="module-icon-wrap icon-notes">📝</div>
+            <div class="module-title-wrap">
+              <span class="module-cat-tag">High-Yield Theory</span>
+              <h3 class="module-title">Comprehensive Notes</h3>
+            </div>
+            <label class="task-checkbox-label" title="Mark notes reviewed">
+              <input type="checkbox" class="task-toggle" data-module="notes" id="task-chk-notes">
+              <span class="custom-chk">✓</span>
+            </label>
+          </div>
+
+          <p class="module-desc" id="mod-notes-desc">
+            Curated chapter notes, essential formula cheat sheets, derivation summaries, and handwritten toppers' mnemonics.
+          </p>
+
+          <div class="module-contents-list" id="mod-notes-items">
+            <!-- Dynamic notes rows -->
+          </div>
+
+          <div class="module-actions-row">
+            <button type="button" class="btn-module-download" id="btn-download-notes">
+              <span>📥 Download Notes (.PDF)</span>
+            </button>
+            <button type="button" class="btn-module-secondary" id="btn-preview-notes">
+              <span>👁️ Quick Read</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- Module 3: Practice Problems (DPP) -->
+        <article class="module-card card-problems">
+          <div class="module-card-head">
+            <div class="module-icon-wrap icon-problems">🎯</div>
+            <div class="module-title-wrap">
+              <span class="module-cat-tag">Graded Problem Sets</span>
+              <h3 class="module-title">Daily Practice Problems (DPP)</h3>
+            </div>
+            <label class="task-checkbox-label" title="Mark practice problems solved">
+              <input type="checkbox" class="task-toggle" data-module="problems" id="task-chk-problems">
+              <span class="custom-chk">✓</span>
+            </label>
+          </div>
+
+          <p class="module-desc" id="mod-problems-desc">
+            20–25 calibrated problems spanning Level 1 (Fundamentals), Level 2 (Target Competitive / Board), and Level 3 (PYQ Traps).
+          </p>
+
+          <div class="module-contents-list" id="mod-problems-items">
+            <!-- Dynamic DPP rows -->
+          </div>
+
+          <div class="module-actions-row">
+            <button type="button" class="btn-module-download" id="btn-download-dpp-sheet">
+              <span>📥 Download DPP Sheet (.PDF)</span>
+            </button>
+            <button type="button" class="btn-module-secondary" id="btn-download-dpp-solutions">
+              <span>📥 Step-by-Step Solutions (.PDF)</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- Module 4: Checkpoint Test -->
+        <article class="module-card card-test">
+          <div class="module-card-head">
+            <div class="module-icon-wrap icon-test">⏱️</div>
+            <div class="module-title-wrap">
+              <span class="module-cat-tag">Daily Retention Check</span>
+              <h3 class="module-title">Daily Milestone Test</h3>
+            </div>
+            <label class="task-checkbox-label" title="Mark checkpoint test completed">
+              <input type="checkbox" class="task-toggle" data-module="test" id="task-chk-test">
+              <span class="custom-chk">✓</span>
+            </label>
+          </div>
+
+          <p class="module-desc" id="mod-test-desc">
+            15-minute diagnostic test calibrated specifically for today's syllabus targets. Instant automated scoring and solution keys.
+          </p>
+
+          <div class="module-contents-list" id="mod-test-items">
+            <!-- Dynamic test info rows -->
+          </div>
+
+          <div class="module-actions-row">
+            <button type="button" class="btn-module-download" id="btn-download-test-paper">
+              <span>📥 Download Test &amp; OMR (.PDF)</span>
+            </button>
+            <button type="button" class="btn-module-launch-test" id="btn-launch-online-daily-test">
+              <span>🚀 Launch Online Test</span>
+            </button>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- 5. Backend Interface Notice -->
+    <section class="planner-backend-banner">
+      <div class="backend-banner-icon">⚙️</div>
+      <div class="backend-banner-text">
+        <strong>PrepPilot Autonomous Flight Planner Engine Connected:</strong>
+        All day-wise lectures, revision notes, daily practice problems (DPP), and diagnostic tests are compiled dynamically by the backend engine for your target exam window.
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Interactive Online Daily Test Modal -->
+  <div class="planner-test-modal" id="planner-test-modal" style="display: none;">
+    <div class="test-modal-backdrop" id="test-modal-backdrop"></div>
+    <div class="test-modal-box">
+      <div class="test-modal-head">
+        <div>
+          <div class="test-modal-badge">⏱️ Timed Daily Checkpoint Test</div>
+          <h3 class="test-modal-title" id="test-modal-title">Day Milestone CBT Test</h3>
+        </div>
+        <button type="button" class="btn-close-test-modal" id="btn-close-test-modal">✕</button>
+      </div>
+      <div class="test-modal-body" id="test-modal-body">
+        <!-- Injected interactive questions -->
+      </div>
+      <div class="test-modal-foot">
+        <button type="button" class="btn-modal-cancel" id="btn-cancel-test">Cancel</button>
+        <button type="button" class="btn-modal-submit" id="btn-submit-daily-test">Submit &amp; View Analysis</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Box -->
+  <div class="planner-toast" id="planner-toast"></div>
+
+  <footer class="planner-footer">
+    PrepPilot Cockpit • Daily Flight Planner Engine • Powered by Autonomous Preparation Curriculum
+  </footer>
+
+  <script src="js/account-manager.js"></script>
+  <script src="js/pilot-planner.js"></script>
+</body>
+</html>

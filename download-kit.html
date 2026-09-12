@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrepPilot | Test Flight Download Center &amp; Mission Kit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/download-kit.css">
+</head>
+<body class="kit-body">
+
+  <!-- 1. Navigation Topbar -->
+  <header class="kit-header">
+    <div class="kit-header-inner">
+      <div class="kit-brand-group">
+        <a href="dashboard.html" class="kit-brand-link" title="Return to Dashboard">
+          <div class="kit-brand-icon">✈️</div>
+          <span>PrepPilot</span>
+        </a>
+        <div class="kit-mission-badge">
+          <span>🎯</span>
+          <span>Test Flight Mission Kit Ready</span>
+        </div>
+      </div>
+
+      <div class="kit-nav-actions">
+        <a href="pilot-planner.html" class="btn-nav-pilot-planner" id="btn-topbar-planner">
+          <span>🗓️ Daily Pilot Planner</span>
+        </a>
+        <a href="dashboard.html" class="btn-back-dashboard">
+          <span>← Back to Dashboard</span>
+        </a>
+        <div class="kit-student-pill">
+          <div class="kit-avatar" id="kit-avatar-initials">AS</div>
+          <span id="kit-avatar-name">Arjun</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 2. Main Workspace -->
+  <main class="kit-main-container">
+
+    <!-- Mission Hero Summary Card -->
+    <section class="kit-hero-card">
+      <div class="kit-hero-top">
+        <div class="kit-hero-title-group">
+          <div class="kit-subject-avatar" id="kit-hero-subject-icon">📐</div>
+          <div>
+            <h1 class="kit-hero-title" id="kit-hero-subject-title">Maths Test Flight Kit</h1>
+            <p class="kit-hero-subtitle">
+              <span>All backend-compiled preparation assets and examination files for your test flight</span>
+              <span class="kit-meta-badge" id="kit-hero-class-badge">Class 10th</span>
+              <span class="kit-meta-badge" id="kit-hero-date-badge">🗓️ Scheduled Date</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats Bar -->
+      <div class="kit-hero-stats">
+        <div class="kit-stat-item">
+          <span class="kit-stat-label">Flight Window</span>
+          <span class="kit-stat-value highlight-blue" id="kit-hero-countdown-val">Tomorrow (In 1 Day)</span>
+        </div>
+        <div class="kit-stat-item">
+          <span class="kit-stat-label">Scheduled Exam Date</span>
+          <span class="kit-stat-value" id="kit-hero-target-date-val">Tomorrow</span>
+        </div>
+        <div class="kit-stat-item">
+          <span class="kit-stat-label">Chapters Targeted</span>
+          <span class="kit-stat-value" id="kit-hero-chapters-count-val">0 Chapters</span>
+        </div>
+        <div class="kit-stat-item">
+          <span class="kit-stat-label">Kit Materials</span>
+          <span class="kit-stat-value highlight-emerald" id="kit-hero-files-count-val">6 Files</span>
+        </div>
+        <div class="kit-stat-item">
+          <span class="kit-stat-label">Total Package Size</span>
+          <span class="kit-stat-value" id="kit-hero-total-size-val">27.0 MB</span>
+        </div>
+      </div>
+
+      <!-- Targeted Chapters Pills -->
+      <div class="kit-chapters-bar">
+        <span class="kit-chapters-label">Targeted Syllabus Chapters in this Flight:</span>
+        <div class="kit-chapters-list" id="kit-hero-chapters-list">
+          <!-- Dynamic chapter chips rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Bulk Download Action Bar -->
+      <div class="kit-bulk-action-bar">
+        <div class="kit-bulk-info">
+          <span>⚡ Download all verified exam materials, formula cheat sheets, and OMR sheets in a single archive</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <a href="pilot-planner.html" class="btn-planner-kit-link" id="btn-kit-open-planner" title="View Day-by-Day Preparation Roadmap">
+            <span>🗓️ Daily Pilot Planner</span>
+          </a>
+          <a href="dashboard.html?modify=true" class="btn-modify-kit-link" id="btn-kit-modify-chapters" title="Alter or modify selected chapters for this test flight">
+            <span>✏️ Alter / Modify Chapters</span>
+          </a>
+          <button type="button" class="btn-download-all" id="btn-download-all-bundle">
+            <span>📦 Download Complete Mission Bundle (.ZIP)</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Download Materials List Section -->
+    <section class="kit-downloads-section">
+      <div class="kit-section-header">
+        <div class="kit-section-title-wrap">
+          <h2>Official Study Materials &amp; Examination Assets</h2>
+          <p>Downloadable files provided by backend for your scheduled test flight</p>
+        </div>
+
+        <div class="kit-filter-pills">
+          <button type="button" class="kit-filter-pill active" data-filter="all">All Files</button>
+          <button type="button" class="kit-filter-pill" data-filter="mock">Mock Papers</button>
+          <button type="button" class="kit-filter-pill" data-filter="revision">Revision Notes</button>
+          <button type="button" class="kit-filter-pill" data-filter="omr">OMR &amp; Blueprints</button>
+          <button type="button" class="kit-filter-pill" data-filter="pyq">Question Bank</button>
+        </div>
+      </div>
+
+      <!-- Downloads Grid List Container -->
+      <div class="kit-downloads-grid" id="kit-downloads-container">
+        <!-- Download cards injected here via JS -->
+      </div>
+
+      <!-- Backend Integration Notice -->
+      <div class="kit-backend-notice-banner">
+        <div class="kit-backend-icon">⚙️</div>
+        <div>
+          <strong style="color: #ffffff;">Backend Download Interface Active:</strong>
+          PrepPilot's automated syllabus compiler connects directly to this interface. The backend supplies high-yield question papers, answer keys, formula booklets, and interactive diagnostic packs tailored to your scheduled chapters.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="kit-footer">
+    PrepPilot Autonomous Cockpit • Official Test Flight Preparation Portal • Connected to Flight Backend Engine
+  </footer>
+
+  <script src="js/account-manager.js"></script>
+  <script src="js/download-kit.js"></script>
+</body>
+</html>

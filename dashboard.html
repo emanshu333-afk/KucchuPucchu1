@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrepPilot | Student Flight Cockpit Dashboard</title>
+  <meta name="description" content="PrepPilot Student Cockpit: Live curriculum progress, daily flight plan, interactive 3D labs, and CBT mock tests.">
+  
+  <!-- Modern Typography (Editorial Serif & Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/conductor-theme.css">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+</head>
+<body class="dashboard-body">
+
+  <!-- Ambient Light Scene -->
+  <div class="ambient-scene" aria-hidden="true">
+    <div class="ambient-blob-1"></div>
+    <div class="ambient-blob-2"></div>
+  </div>
+
+  <!-- Cockpit Topbar Navigation -->
+  <header class="cockpit-topbar">
+    <div class="topbar-container">
+      
+      <!-- Brand Anchor -->
+      <a href="index.html" class="topbar-brand" title="Return to Landing Page">
+        <div class="topbar-logo-box">
+          <img src="assets/logo.png" alt="PrepPilot" class="topbar-logo-img preppilot-logo">
+        </div>
+        <span class="topbar-brand-text">PrepPilot</span>
+        <span class="topbar-cockpit-badge">Cockpit</span>
+      </a>
+
+      <!-- Academic Track & Course Switcher in Main Menu -->
+      <div class="nav-course-selector-wrap" id="dash-course-selector-wrap">
+        <div class="track-pill-dropdown" id="dash-track-dropdown" role="button" aria-expanded="false" aria-haspopup="true" title="Click to change your class and course">
+          <span class="track-dot-indicator"></span>
+          <span id="dash-active-track-label">Class 10th (CBSE Board Mastery)</span>
+          <span style="font-size: 0.7rem; color: #94a3b8;">▼</span>
+        </div>
+
+        <!-- Interactive Course & Class Dropdown Flyout -->
+        <div class="nav-course-dropdown" id="dash-course-dropdown" role="menu">
+          <div class="nav-course-head">
+            <div class="nav-course-head-tag">🎯 Active Flight Radar</div>
+            <div class="nav-course-head-title">Change Class &amp; Course</div>
+            <p class="nav-course-head-sub">Switch your academic syllabus stream. Modules &amp; tests update in real time.</p>
+          </div>
+
+          <!-- 1. Grade / Class Choice -->
+          <div class="nav-course-section-title">1. Select Academic Class</div>
+          <div class="nav-class-pills-row" id="dash-class-pills">
+            <button type="button" class="nav-class-btn" data-class="6th">6th</button>
+            <button type="button" class="nav-class-btn" data-class="7th">7th</button>
+            <button type="button" class="nav-class-btn" data-class="8th">8th</button>
+            <button type="button" class="nav-class-btn" data-class="9th">9th</button>
+            <button type="button" class="nav-class-btn active" data-class="10th">10th</button>
+            <button type="button" class="nav-class-btn" data-class="11th">11th</button>
+            <button type="button" class="nav-class-btn" data-class="12th">12th</button>
+            <button type="button" class="nav-class-btn" data-class="Dropper">Dropper</button>
+          </div>
+
+          <!-- 2. Course Stream Choice (Dynamic) -->
+          <div class="nav-course-section-title">2. Select Course &amp; Stream</div>
+          <div class="nav-streams-grid" id="dash-streams-grid">
+            <!-- Dynamically populated based on chosen grade -->
+          </div>
+
+          <!-- 3. Actions -->
+          <div class="nav-course-footer">
+            <span class="nav-course-hint">Updates syllabus radar immediately</span>
+            <button type="button" class="btn-nav-apply-course" id="btn-dash-apply-course">
+              Apply &amp; Update Radar ✓
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Group: Streak, XP & Student Profile -->
+      <div class="topbar-right-group">
+        <div class="student-streak-pill" title="Daily Learning Streak">
+          <span>🔥</span>
+          <span>14 Days</span>
+        </div>
+
+        <div class="student-xp-pill" title="Total Experience Points">
+          <span>⭐</span>
+          <span id="student-xp-val">4,920 XP</span>
+        </div>
+
+        <div class="account-flyout-container" id="profile-flyout-wrap">
+          <!-- Dark Frosted Profile Pill Trigger (Matching Reference Image) -->
+          <button type="button" class="btn-dark-profile-pill" id="student-profile-btn" aria-haspopup="menu" aria-expanded="false" aria-controls="dark-profile-menu" title="Pilot User Profile & Preferences">
+            <div class="profile-pill-avatar" id="avatar-initials">AS</div>
+            <span class="profile-pill-name" id="avatar-name">Arjun Sharma</span>
+            <span class="profile-pill-badge">
+              <svg class="pro-bolt-icon" viewBox="0 0 24 24">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+              </svg>
+              <span>Pro</span>
+            </span>
+          </button>
+
+          <!-- Accessible Dark Liquid-Glass Menu (Directly Matching Reference Image HRrUDA4XYAAcrpC.avif) -->
+          <div class="dark-profile-menu" id="dark-profile-menu" role="menu" aria-label="User Profile Menu">
+            <button type="button" class="dark-menu-item active" role="menuitem" tabindex="0" id="menu-item-profile" data-action="profile">
+              <span class="dark-item-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </span>
+              <span class="dark-item-label">Profile</span>
+            </button>
+
+            <button type="button" class="dark-menu-item" role="menuitem" tabindex="-1" id="menu-item-community" data-action="community">
+              <span class="dark-item-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                </svg>
+              </span>
+              <span class="dark-item-label">Community</span>
+            </button>
+
+            <button type="button" class="dark-menu-item" role="menuitem" tabindex="-1" id="menu-item-subscription" data-action="subscription">
+              <span class="dark-item-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
+                </svg>
+              </span>
+              <span class="dark-item-label">Subscription</span>
+            </button>
+
+            <button type="button" class="dark-menu-item" role="menuitem" tabindex="-1" id="menu-item-settings" data-action="settings">
+              <span class="dark-item-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                </svg>
+              </span>
+              <span class="dark-item-label">Settings</span>
+            </button>
+
+            <div class="dark-menu-divider" role="separator"></div>
+
+            <button type="button" class="dark-menu-item" role="menuitem" tabindex="-1" id="menu-item-help" data-action="help">
+              <span class="dark-item-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                </svg>
+              </span>
+              <span class="dark-item-label">Help Center</span>
+            </button>
+
+            <button type="button" class="dark-menu-item text-danger" role="menuitem" tabindex="-1" id="menu-item-signout" data-action="signout">
+              <span class="dark-item-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+                </svg>
+              </span>
+              <span class="dark-item-label">Sign Out</span>
+            </button>
+          </div>
+        </div>
+
+        <button type="button" class="btn-signout-cockpit" id="btn-cockpit-signout" title="Sign out of student cockpit">
+          <span class="signout-icon">🚪</span>
+          <span>Sign Out</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Cockpit Workspace -->
+  <main class="cockpit-main-container">
+
+    <!-- Quick Schedule Switcher & Status Bar (Visible when schedules exist) -->
+    <section class="schedule-switcher-bar" id="section-schedule-switcher" style="display: none;">
+      <div class="switcher-bar-inner">
+        <div class="active-schedule-badge-wrap">
+          <span class="switcher-lead-label">✈️ Active Flight:</span>
+          <div class="active-schedule-dropdown-rel">
+            <button type="button" class="btn-active-schedule-select" id="btn-active-schedule-dropdown" aria-haspopup="true" aria-expanded="false" title="Click to switch between saved schedules">
+              <span class="active-sched-title" id="active-sched-title">Class 10th • Maths CBT Mock</span>
+              <span class="active-sched-date" id="active-sched-date">🗓️ Sept 25</span>
+              <span class="sched-chevron">▼</span>
+            </button>
+
+            <!-- Dropdown of all saved schedules -->
+            <div class="schedules-flyout-dropdown" id="schedules-flyout-dropdown">
+              <div class="flyout-head">
+                <span>📁 Your Saved Flight Schedules</span>
+                <span class="flyout-count" id="flyout-schedules-count">0</span>
+              </div>
+              <div class="flyout-list" id="flyout-schedules-list">
+                <!-- Dynamically populated by dashboard.js -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="switcher-actions-wrap">
+          <button type="button" class="btn-switcher-action btn-jump-todo" id="btn-bar-jump-todo" title="Jump to Flight To-Do Checklist">
+            <span>📋 Flight To-Dos</span>
+          </button>
+          <button type="button" class="btn-switcher-action btn-view-hub" id="btn-bar-view-hub" title="View all schedules hub">
+            <span>📁 All Schedules (<span id="btn-schedules-count">0</span>)</span>
+          </button>
+          <button type="button" class="btn-new-schedule-pill" id="btn-start-new-schedule" title="Create a new test flight schedule">
+            <span>+ New Schedule</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1. Step 1: Choose Your Academic Class -->
+    <section class="class-selection-panel" id="section-class-select">
+      <div class="panel-step-header">
+        <div class="panel-step-badge">
+          <span class="step-num">Step 1</span> Choose Your Class
+        </div>
+        <h1 class="class-panel-title">Choose Your Academic Class</h1>
+        <p class="class-panel-sub">Select your class below. The subjects of that class will immediately appear in Step 2.</p>
+      </div>
+
+      <!-- Prominent Class Cards Grid -->
+      <div class="class-cards-grid" id="dash-class-cards-grid">
+        <button type="button" class="class-choice-card" data-class="6th" onclick="window.preppilotSwitchClass &amp;&amp; window.preppilotSwitchClass('6th')" aria-label="Select Class 6th">
+          <div class="class-card-check">✓</div>
+          <span class="class-card-label">Class 6th</span>
+          <span class="class-card-tag">Middle School • 5 Subjects</span>
+        </button>
+        <button type="button" class="class-choice-card" data-class="7th" onclick="window.preppilotSwitchClass &amp;&amp; window.preppilotSwitchClass('7th')" aria-label="Select Class 7th">
+          <div class="class-card-check">✓</div>
+          <span class="class-card-label">Class 7th</span>
+          <span class="class-card-tag">Middle School • 5 Subjects</span>
+        </button>
+        <button type="button" class="class-choice-card" data-class="8th" onclick="window.preppilotSwitchClass &amp;&amp; window.preppilotSwitchClass('8th')" aria-label="Select Class 8th">
+          <div class="class-card-check">✓</div>
+          <span class="class-card-label">Class 8th</span>
+          <span class="class-card-tag">Middle School • 5 Subjects</span>
+        </button>
+        <button type="button" class="class-choice-card" data-class="9th" onclick="window.preppilotSwitchClass &amp;&amp; window.preppilotSwitchClass('9th')" aria-label="Select Class 9th">
+          <div class="class-card-check">✓</div>
+          <span class="class-card-label">Class 9th</span>
+          <span class="class-card-tag">Secondary • 5 Subjects</span>
+        </button>
+        <button type="button" class="class-choice-card active" data-class="10th" onclick="window.preppilotSwitchClass &amp;&amp; window.preppilotSwitchClass('10th')" aria-label="Select Class 10th">
+          <div class="class-card-check">✓</div>
+          <span class="class-card-label">Class 10th</span>
+          <span class="class-card-tag">Board Target • 5 Subjects</span>
+        </button>
+        <button type="button" class="class-choice-card" data-class="11th" onclick="window.preppilotSwitchClass &amp;&amp; window.preppilotSwitchClass('11th')" aria-label="Select Class 11th">
+          <div class="class-card-check">✓</div>
+          <span class="class-card-label">Class 11th</span>
+          <span class="class-card-tag">Senior Secondary • Stream Selector</span>
+        </button>
+        <button type="button" class="class-choice-card" data-class="12th" onclick="window.preppilotSwitchClass &amp;&amp; window.preppilotSwitchClass('12th')" aria-label="Select Class 12th">
+          <div class="class-card-check">✓</div>
+          <span class="class-card-label">Class 12th</span>
+          <span class="class-card-tag">Board &amp; Entrances • Stream Selector</span>
+        </button>
+        <button type="button" class="class-choice-card" data-class="Dropper" onclick="window.preppilotSwitchClass &amp;&amp; window.preppilotSwitchClass('Dropper')" aria-label="Select Dropper">
+          <div class="class-card-check">✓</div>
+          <span class="class-card-label">Dropper</span>
+          <span class="class-card-tag">Target JEE / NEET • Stream Selector</span>
+        </button>
+      </div>
+
+      <!-- Dynamic Stream Selection Box for 11th, 12th, Dropper -->
+      <div class="stream-selection-box" id="dash-stream-selection-box" style="display: none;">
+        <div class="stream-selection-title">
+          <span>🎯</span>
+          <span id="stream-selection-title-text">Select Target Stream for Class 11th:</span>
+        </div>
+        <div class="stream-cards-grid" id="dash-stream-cards-grid">
+          <!-- Dynamically populated stream cards -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Step 2: Subjects of that Class (Appears / Updates when Class is Chosen) -->
+    <section class="subjects-selection-panel" id="section-subjects">
+      <div class="subjects-panel-header">
+        <div class="panel-step-badge">
+          <span class="step-num">Step 2</span> Choose Subject
+        </div>
+        <h2 class="subjects-panel-title" id="subjects-panel-title">Subjects for Class 10th</h2>
+        <p class="subjects-panel-sub" id="subjects-panel-sub">Choose any subject below to fulfill its syllabus and prepare for your test</p>
+      </div>
+
+      <!-- Live Stream Status Indicator -->
+      <div class="active-stream-status-pill" id="active-stream-status-pill">
+        <span class="status-indicator-dot"></span>
+        <span id="active-stream-status-text">Class 10th Syllabus • 5 Subjects (Maths, Hindi, English, Science, Social Science)</span>
+      </div>
+
+      <div class="planner-subjects-grid" id="planner-subjects-grid">
+        <button type="button" class="planner-subject-card" data-subj="maths" aria-label="Select Maths">
+          <div class="subj-header">
+            <div class="subj-icon math-bg">📐</div>
+            <div class="subj-check-indicator">✓</div>
+          </div>
+          <h3 class="subj-name">Maths</h3>
+          <div class="subj-meta">
+            <span>Comprehensive Syllabus</span>
+            <span class="subj-chapters-pill">13 Chapters</span>
+          </div>
+        </button>
+
+        <button type="button" class="planner-subject-card" data-subj="hindi" aria-label="Select Hindi">
+          <div class="subj-header">
+            <div class="subj-icon hindi-bg">📖</div>
+            <div class="subj-check-indicator">✓</div>
+          </div>
+          <h3 class="subj-name">Hindi</h3>
+          <div class="subj-meta">
+            <span>Comprehensive Syllabus</span>
+            <span class="subj-chapters-pill">12 Chapters</span>
+          </div>
+        </button>
+
+        <button type="button" class="planner-subject-card" data-subj="english" aria-label="Select English">
+          <div class="subj-header">
+            <div class="subj-icon english-bg">🔤</div>
+            <div class="subj-check-indicator">✓</div>
+          </div>
+          <h3 class="subj-name">English</h3>
+          <div class="subj-meta">
+            <span>Comprehensive Syllabus</span>
+            <span class="subj-chapters-pill">12 Chapters</span>
+          </div>
+        </button>
+
+        <button type="button" class="planner-subject-card" data-subj="science" aria-label="Select Science">
+          <div class="subj-header">
+            <div class="subj-icon science-bg">🔬</div>
+            <div class="subj-check-indicator">✓</div>
+          </div>
+          <h3 class="subj-name">Science</h3>
+          <div class="subj-meta">
+            <span>Comprehensive Syllabus</span>
+            <span class="subj-chapters-pill">14 Chapters</span>
+          </div>
+        </button>
+
+        <button type="button" class="planner-subject-card" data-subj="social_science" aria-label="Select Social Science">
+          <div class="subj-header">
+            <div class="subj-icon social-bg">🌍</div>
+            <div class="subj-check-indicator">✓</div>
+          </div>
+          <h3 class="subj-name">Social Science</h3>
+          <div class="subj-meta">
+            <span>Comprehensive Syllabus</span>
+            <span class="subj-chapters-pill">13 Chapters</span>
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <!-- 3. Step 3: Chapters Selection Panel (Appears when user chooses any subject) -->
+    <section class="chapters-selection-panel" id="section-chapters" style="display: none;">
+      <div class="chapters-panel-header">
+        <div>
+          <div class="panel-step-badge">
+            <span class="step-num">Step 3</span> Select Chapters
+          </div>
+          <h2 class="chapters-panel-title" id="selected-subject-title">Select Chapters</h2>
+          <p class="chapters-panel-sub" id="selected-subject-sub">Tick all chapters you want to cover for this test</p>
+        </div>
+
+        <div class="chapter-actions-bar">
+          <div class="chapter-search-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="chapter-search-input" placeholder="Search chapters..." aria-label="Search chapters">
+          </div>
+          <div class="chapter-quick-btn-group">
+            <button type="button" class="btn-chapter-ctrl" id="btn-select-all-chapters">Select All</button>
+            <button type="button" class="btn-chapter-ctrl" id="btn-deselect-all-chapters">Deselect All</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Selection summary -->
+      <div class="chapter-selection-status-row">
+        <span class="chapter-selected-summary" id="chapter-selection-summary">0 chapters selected</span>
+        <span class="chapter-min-hint" id="chapter-min-hint">Tick chapters to choose test date</span>
+      </div>
+
+      <!-- Syllabus Origin Filter Row (For Dropper combining Class 11 & 12) -->
+      <div class="chapter-origin-filter-row" id="chapter-origin-filter-row" style="display: none;">
+        <span class="origin-filter-label">📚 Syllabus Scope:</span>
+        <div class="origin-filter-buttons" id="origin-filter-buttons">
+          <button type="button" class="btn-origin-filter active" data-filter="all">All Combined Chapters</button>
+          <button type="button" class="btn-origin-filter" data-filter="Class 11">Class 11 Only</button>
+          <button type="button" class="btn-origin-filter" data-filter="Class 12">Class 12 Only</button>
+        </div>
+      </div>
+
+      <!-- Chapters Checklist Grid -->
+      <div class="chapters-checklist-grid" id="chapters-checklist-container">
+        <!-- Chapter items with checkboxes injected here -->
+      </div>
+    </section>
+
+    <!-- 4. Step 4: Calendar Section (Appears after choosing chapters, Minimum Date = Tomorrow) -->
+    <section class="calendar-scheduling-panel" id="section-calendar" style="display: none;">
+      <div class="calendar-panel-header">
+        <div class="panel-step-badge">
+          <span class="step-num">Step 4</span> Schedule Test Date
+        </div>
+        <h2 class="calendar-panel-title">Choose Test Date</h2>
+        <p class="calendar-panel-sub">Select the date for your test (Minimum date: Tomorrow)</p>
+      </div>
+
+      <div class="calendar-scheduling-box">
+        <!-- Presets -->
+        <div class="calendar-presets-row">
+          <span class="preset-label">Quick Presets:</span>
+          <div class="preset-pills-list">
+            <button type="button" class="date-preset-pill active" data-offset="1" id="preset-tomorrow">
+              <span>Tomorrow</span>
+              <small id="preset-tomorrow-date"></small>
+            </button>
+            <button type="button" class="date-preset-pill" data-offset="3" id="preset-3days">
+              <span>In 3 Days</span>
+              <small id="preset-3days-date"></small>
+            </button>
+            <button type="button" class="date-preset-pill" data-offset="7" id="preset-7days">
+              <span>In 1 Week</span>
+              <small id="preset-7days-date"></small>
+            </button>
+          </div>
+        </div>
+
+        <!-- Date Picker with min=tomorrow -->
+        <div class="calendar-input-card">
+          <div class="calendar-input-left">
+            <label for="test-date-picker" class="calendar-input-label">
+              <span style="font-size: 1.2rem;">🗓️</span>
+              <span>Test Date:</span>
+            </label>
+            <div class="calendar-field-wrap">
+              <input type="date" id="test-date-picker" class="test-date-input" aria-describedby="test-date-hint">
+              <span class="calendar-min-notice" id="test-date-hint">
+                🔒 Minimum date is strictly set to <strong>Tomorrow</strong>.
+              </span>
+            </div>
+          </div>
+
+          <div class="calendar-countdown-preview" id="calendar-countdown-preview">
+            <div class="countdown-tag">Scheduled Test Window</div>
+            <div class="countdown-days-val" id="countdown-days-text">Tomorrow (In 1 Day)</div>
+            <div class="countdown-meta" id="countdown-meta-text">Target: 0 chapters</div>
+          </div>
+        </div>
+
+        <!-- Schedule Action Button -->
+        <div class="schedule-submit-wrap">
+          <button type="button" class="btn-lock-test-flight" id="btn-schedule-test">
+            <span>🚀 Schedule Test Flight</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scheduled Test Confirmation Card -->
+    <div id="active-test-mission-wrap" class="active-mission-wrapper" style="display: none; margin-top: 24px;"></div>
+
+    <!-- Interactive Flight To-Do List Section -->
+    <section class="flight-todo-section" id="section-flight-todo" style="display: none; margin-top: 32px;">
+      <div class="todo-panel-card">
+        <div class="todo-panel-header">
+          <div class="todo-title-group">
+            <div class="todo-badge">
+              <span>📋 Flight Mission To-Do Checklist</span>
+            </div>
+            <h2 class="todo-heading" id="todo-schedule-heading">Preparation Milestones</h2>
+            <p class="todo-subtext" id="todo-schedule-subtext">Day-wise masterclasses, practice drills, notes &amp; checkpoint tests for your locked flight.</p>
+          </div>
+
+          <div class="todo-stats-group">
+            <div class="todo-stat-card">
+              <span class="todo-stat-num" id="todo-progress-percent">0%</span>
+              <span class="todo-stat-label">Milestones Done</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="todo-progress-track">
+          <div class="todo-progress-fill" id="todo-progress-bar" style="width: 0%;"></div>
+        </div>
+        <div class="todo-progress-meta">
+          <span id="todo-progress-text">0 of 0 milestones completed</span>
+          <span class="todo-xp-reward-hint">⚡ +15 XP rewarded for every completed task!</span>
+        </div>
+
+        <!-- Controls Row: View Switcher Tabs, Filter Pills & Add Form -->
+        <div class="todo-controls-row">
+          <!-- CollectUI Segmented View Switcher: Board, List, Roadmap -->
+          <div class="todo-view-switcher" id="todo-view-switcher">
+            <button type="button" class="todo-view-tab active" data-view="board" id="tab-view-board" title="Switch to Kanban Board View">
+              <span class="view-tab-icon">📌</span>
+              <span>Board</span>
+            </button>
+            <button type="button" class="todo-view-tab" data-view="list" id="tab-view-list" title="Switch to Linear Checklist View">
+              <span class="view-tab-icon">📋</span>
+              <span>List</span>
+            </button>
+            <button type="button" class="todo-view-tab" data-view="roadmap" id="tab-view-roadmap" title="Switch to Day-by-Day Roadmap View">
+              <span class="view-tab-icon">🗓️</span>
+              <span>Roadmap</span>
+            </button>
+          </div>
+
+          <!-- Filter Pills -->
+          <div class="todo-filter-pills" id="todo-filter-pills">
+            <button type="button" class="todo-filter-btn active" data-filter="all">All (<span id="todo-count-all">0</span>)</button>
+            <button type="button" class="todo-filter-btn" data-filter="today">Today (<span id="todo-count-today">0</span>)</button>
+            <button type="button" class="todo-filter-btn" data-filter="pending">Pending (<span id="todo-count-pending">0</span>)</button>
+            <button type="button" class="todo-filter-btn" data-filter="completed">Mastered (<span id="todo-count-completed">0</span>)</button>
+          </div>
+
+          <!-- Add Custom Task Form -->
+          <form class="todo-add-task-form" id="todo-add-task-form">
+            <input type="text" class="todo-add-input" id="todo-custom-input" placeholder="+ Add flight goal or custom task..." required>
+            <button type="submit" class="btn-add-custom-task">+ Add Task</button>
+          </form>
+        </div>
+
+        <!-- 1. Interactive Kanban Board View (CollectUI Multi-Column Style) -->
+        <div class="todo-kanban-board" id="todo-board-view">
+          <!-- Column 1: To Do -->
+          <div class="kanban-column" id="col-todo" data-lane="todo">
+            <div class="kanban-column-header">
+              <div class="kanban-header-left">
+                <span class="kanban-col-icon">🎯</span>
+                <span class="kanban-col-title">To Do</span>
+              </div>
+              <span class="kanban-count-pill" id="badge-todo-count">0</span>
+            </div>
+            <div class="kanban-lane-dropzone" id="lane-todo" data-lane="todo">
+              <!-- Dynamically injected cards -->
+            </div>
+          </div>
+
+          <!-- Column 2: Doing -->
+          <div class="kanban-column" id="col-doing" data-lane="doing">
+            <div class="kanban-column-header">
+              <div class="kanban-header-left">
+                <span class="kanban-col-icon">⚡</span>
+                <span class="kanban-col-title">Doing</span>
+              </div>
+              <span class="kanban-count-pill" id="badge-doing-count">0</span>
+            </div>
+            <div class="kanban-lane-dropzone" id="lane-doing" data-lane="doing">
+              <!-- Dynamically injected cards -->
+            </div>
+          </div>
+
+          <!-- Column 3: Mastered / Done -->
+          <div class="kanban-column" id="col-done" data-lane="done">
+            <div class="kanban-column-header">
+              <div class="kanban-header-left">
+                <span class="kanban-col-icon">🏆</span>
+                <span class="kanban-col-title">Mastered</span>
+              </div>
+              <span class="kanban-count-pill" id="badge-done-count">0</span>
+            </div>
+            <div class="kanban-lane-dropzone" id="lane-done" data-lane="done">
+              <!-- Dynamically injected cards -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Linear Checklist View (Alternative View) -->
+        <div class="todo-items-list" id="todo-items-list" style="display: none;">
+          <!-- Dynamically populated by dashboard.js -->
+        </div>
+
+        <!-- 3. Day Roadmap View (Alternative View) -->
+        <div class="todo-roadmap-view" id="todo-roadmap-view" style="display: none;">
+          <!-- Dynamically populated by dashboard.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- My Test Flight Schedules Hub (Organized Repository of All Created Schedules) -->
+    <section class="schedules-hub-section" id="section-schedules-hub" style="display: none; margin-top: 36px;">
+      <div class="schedules-hub-card">
+        <div class="schedules-hub-header">
+          <div class="schedules-hub-titles">
+            <div class="schedules-hub-badge">📁 Multi-Schedule Cockpit Archive</div>
+            <h2 class="schedules-hub-title">My Test Flight Schedules</h2>
+            <p class="schedules-hub-sub">Switch between different exam preparations anytime. Every schedule maintains its own syllabus, test countdown, and flight to-do checklist.</p>
+          </div>
+          <button type="button" class="btn-create-schedule-hero" id="btn-hub-create-new">
+            <span>+ Create New Test Schedule</span>
+          </button>
+        </div>
+
+        <!-- Schedules Grid Container -->
+        <div class="schedules-cards-grid" id="schedules-cards-grid">
+          <!-- Dynamically populated cards for every created schedule -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- CBT Test Simulator Interactive Modal -->
+  <div class="cbt-modal-backdrop" id="cbt-modal">
+    <div class="cbt-modal-card">
+      <div class="cbt-modal-head">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 1.1rem;">📝</span>
+          <span style="font-weight: 700; font-size: 0.95rem;">PrepPilot CBT Live Practice Simulator</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <span style="font-family: monospace; font-weight: 700; color: #38bdf8; font-size: 1rem;" id="cbt-q-timer">⏱️ 02:45</span>
+          <button type="button" id="cbt-modal-close" style="background: none; border: none; color: #ffffff; font-size: 1.4rem; cursor: pointer;">&times;</button>
+        </div>
+      </div>
+
+      <div class="cbt-modal-body">
+        <div class="cbt-q-number" id="cbt-q-label">Question 14 of 30 • Physics Mechanics</div>
+        <div class="cbt-q-text" id="cbt-q-text">
+          A projectile is launched from the ground with an initial velocity of 40 m/s at an angle of 30° to the horizontal. Assuming \(g = 10\text{ m/s}^2\), what is the maximum height attained by the projectile?
+        </div>
+
+        <div class="cbt-options-list" id="cbt-options-list">
+          <div class="cbt-option-item" data-opt="A">
+            <span style="font-weight: 700; width: 22px;">A)</span>
+            <span>15 meters</span>
+          </div>
+          <div class="cbt-option-item" data-opt="B">
+            <span style="font-weight: 700; width: 22px;">B)</span>
+            <span>20 meters</span>
+          </div>
+          <div class="cbt-option-item" data-opt="C">
+            <span style="font-weight: 700; width: 22px;">C)</span>
+            <span>25 meters</span>
+          </div>
+          <div class="cbt-option-item" data-opt="D">
+            <span style="font-weight: 700; width: 22px;">D)</span>
+            <span>30 meters</span>
+          </div>
+        </div>
+
+        <div id="cbt-feedback-box" style="display: none; padding: 12px; border-radius: 10px; font-size: 0.85rem; line-height: 1.4;"></div>
+      </div>
+
+      <div class="cbt-modal-foot">
+        <button type="button" class="btn-cockpit-secondary" id="btn-cbt-prev">← Previous</button>
+        <button type="button" class="btn-cockpit-primary" id="btn-cbt-check">Submit Answer &amp; Explain</button>
+        <button type="button" class="btn-cockpit-secondary" id="btn-cbt-next">Next Question →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. Profile Details & Multi-Account Dialog Modal -->
+  <div class="pilot-dialog-backdrop" id="profile-detail-modal" role="dialog" aria-modal="true" aria-labelledby="profile-dialog-title">
+    <div class="pilot-dialog-card">
+      <div class="pilot-dialog-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 1.3rem;">👤</span>
+          <h3 class="pilot-dialog-title" id="profile-dialog-title">Pilot Profile &amp; Accounts</h3>
+        </div>
+        <button type="button" class="pilot-dialog-close" data-close-modal="profile-detail-modal" aria-label="Close dialog">✕</button>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 16px; background: #f8fafc; border: 1px solid #e2e8f0; margin-bottom: 16px;">
+        <div class="profile-pill-avatar" id="dialog-avatar" style="width: 48px; height: 48px; font-size: 1.15rem;">AS</div>
+        <div>
+          <div style="font-size: 1.05rem; font-weight: 800; color: #0f172a;" id="dialog-name">Arjun Sharma</div>
+          <div style="font-size: 0.78rem; font-weight: 600; color: var(--accent-orbit);" id="dialog-course">Class 10th • CBSE Board</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+        <div style="background: #f8fafc; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
+          <div style="font-size: 0.7rem; color: #64748b; font-weight: 600;">Learning Streak</div>
+          <div style="font-size: 0.95rem; font-weight: 800; color: #f59e0b;">🔥 14 Days</div>
+        </div>
+        <div style="background: #f8fafc; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
+          <div style="font-size: 0.7rem; color: #64748b; font-weight: 600;">Flight Experience</div>
+          <div style="font-size: 0.95rem; font-weight: 800; color: #10b981;" id="dialog-xp-val">4,920 XP</div>
+        </div>
+      </div>
+
+      <div style="font-size: 0.74rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8; margin-bottom: 8px;">
+        Saved Student Profiles
+      </div>
+      <div class="account-saved-list" id="dialog-saved-list" style="max-height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px;">
+        <!-- Injected from localStorage -->
+      </div>
+
+      <button type="button" class="btn-add-new-acc" id="btn-dialog-add-account" style="width: 100%;">
+        + Add / Register New Account
+      </button>
+    </div>
+  </div>
+
+  <!-- 2. Community Dialog Modal -->
+  <div class="pilot-dialog-backdrop" id="community-modal" role="dialog" aria-modal="true" aria-labelledby="community-dialog-title">
+    <div class="pilot-dialog-card">
+      <div class="pilot-dialog-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 1.3rem;">👥</span>
+          <h3 class="pilot-dialog-title" id="community-dialog-title">Flight Deck Study Community</h3>
+        </div>
+        <button type="button" class="pilot-dialog-close" data-close-modal="community-modal" aria-label="Close dialog">✕</button>
+      </div>
+
+      <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(14, 165, 233, 0.08)); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 16px; padding: 16px; margin-bottom: 16px; text-align: center;">
+        <span style="font-size: 1.6rem;">⚡</span>
+        <div style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-top: 4px;">4,821 Pilots Online</div>
+        <p style="font-size: 0.8rem; color: #64748b; margin: 4px 0 0;">Students studying live across CBSE, ICSE, JEE &amp; NEET tracks.</p>
+      </div>
+
+      <div style="font-size: 0.78rem; font-weight: 700; color: #334155; margin-bottom: 8px;">🔥 Daily Streak Leaderboard:</div>
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-radius: 10px; background: #f8fafc; border: 1px solid #e2e8f0; font-size: 0.84rem;">
+          <span>🥇 Riya Patel (Class 12th JEE)</span>
+          <span style="font-weight: 800; color: #f59e0b;">54 Days Streak 🔥</span>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-radius: 10px; background: #f8fafc; border: 1px solid #e2e8f0; font-size: 0.84rem;">
+          <span>🥈 Siddharth Joshi (Class 10th CBSE)</span>
+          <span style="font-weight: 800; color: #64748b;">42 Days Streak 🔥</span>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-radius: 10px; background: #f8fafc; border: 1px solid #e2e8f0; font-size: 0.84rem;">
+          <span>🥉 You (${studentName})</span>
+          <span style="font-weight: 800; color: #10b981;">14 Days Streak 🔥</span>
+        </div>
+      </div>
+
+      <button type="button" class="btn-cockpit-primary" style="width: 100%;" onclick="alert('Connected to Study Squad Flight Channel! 🚀');">
+        Join Active Study Squad ✈️
+      </button>
+    </div>
+  </div>
+
+  <!-- 3. Subscription Dialog Modal -->
+  <div class="pilot-dialog-backdrop" id="subscription-modal" role="dialog" aria-modal="true" aria-labelledby="sub-dialog-title">
+    <div class="pilot-dialog-card">
+      <div class="pilot-dialog-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 1.3rem;">💳</span>
+          <h3 class="pilot-dialog-title" id="sub-dialog-title">PrepPilot Pro Flight Pass</h3>
+        </div>
+        <button type="button" class="pilot-dialog-close" data-close-modal="subscription-modal" aria-label="Close dialog">✕</button>
+      </div>
+
+      <div style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); color: #ffffff; border-radius: 18px; padding: 20px; margin-bottom: 16px; box-shadow: 0 10px 25px -4px rgba(79, 70, 229, 0.4);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; background: rgba(255, 255, 255, 0.2); padding: 3px 10px; border-radius: 999px;">Active Plan</span>
+          <span style="font-size: 1.1rem; font-weight: 800; color: #38bdf8;">⚡ PRO PASS</span>
+        </div>
+        <div style="font-size: 1.25rem; font-weight: 800;">Full Cockpit Unlimited Access</div>
+        <p style="font-size: 0.8rem; color: #cbd5e1; margin: 4px 0 0;">All Classes 6th–12th, Droppers, 3D Labs &amp; National CBT Mocks unlocked.</p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem; color: #475569; margin-bottom: 18px;">
+        <div>✓ <strong>24/7 AI Doubt Pilot:</strong> Instant formula &amp; derivation solvers</div>
+        <div>✓ <strong>Interactive 3D Practical Labs:</strong> Rotational physics &amp; chemistry orbitals</div>
+        <div>✓ <strong>All-India CBT Test Series:</strong> Real-time percentile grading</div>
+      </div>
+
+      <button type="button" class="btn-cockpit-secondary" style="width: 100%;" onclick="alert('Your Pro Pass is active with lifetime student access! ⭐');">
+        Manage Subscription &amp; Invoices
+      </button>
+    </div>
+  </div>
+
+  <!-- 4. Settings Dialog Modal -->
+  <div class="pilot-dialog-backdrop" id="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-dialog-title">
+    <div class="pilot-dialog-card">
+      <div class="pilot-dialog-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 1.3rem;">⚙️</span>
+          <h3 class="pilot-dialog-title" id="settings-dialog-title">Flight Deck Settings</h3>
+        </div>
+        <button type="button" class="pilot-dialog-close" data-close-modal="settings-modal" aria-label="Close dialog">✕</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">
+          <div>
+            <div style="font-size: 0.86rem; font-weight: 700; color: #0f172a;">Luminous Liquid Glass Theme</div>
+            <div style="font-size: 0.72rem; color: #64748b;">Dynamic ambient glow scene</div>
+          </div>
+          <span style="font-size: 0.78rem; font-weight: 700; color: #10b981;">Active</span>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">
+          <div>
+            <div style="font-size: 0.86rem; font-weight: 700; color: #0f172a;">Aero-Dart Interactive Cursor</div>
+            <div style="font-size: 0.72rem; color: #64748b;">Dynamic context morphing reticle</div>
+          </div>
+          <span style="font-size: 0.78rem; font-weight: 700; color: #10b981;">Enabled</span>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">
+          <div>
+            <div style="font-size: 0.86rem; font-weight: 700; color: #0f172a;">Study Flight Notifications</div>
+            <div style="font-size: 0.72rem; color: #64748b;">Daily practice drill alerts</div>
+          </div>
+          <span style="font-size: 0.78rem; font-weight: 700; color: #10b981;">Enabled</span>
+        </div>
+      </div>
+
+      <button type="button" class="btn-cockpit-primary" style="width: 100%;" onclick="alert('Preferences saved successfully! ✓');">
+        Save Preferences ✓
+      </button>
+    </div>
+  </div>
+
+  <!-- Sign Out Confirmation Modal -->
+  <div class="signout-modal-backdrop" id="signout-modal" role="dialog" aria-modal="true" aria-labelledby="signout-title">
+    <div class="signout-modal-card">
+      <div class="signout-icon-orbit">
+        <div class="signout-icon-circle">
+          <span>🚪</span>
+        </div>
+      </div>
+      
+      <h3 class="signout-modal-title" id="signout-title">Confirm Sign Out</h3>
+      <p class="signout-modal-desc">
+        Are you sure you want to sign out of your student cockpit? Your syllabus radar, flight checklist tasks, and XP will remain securely saved.
+      </p>
+
+      <div class="signout-modal-actions">
+        <button type="button" class="btn-signout-cancel" id="btn-signout-cancel">
+          No, Stay in Cockpit
+        </button>
+        <button type="button" class="btn-signout-confirm" id="btn-signout-confirm">
+          Yes, Sign Out →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Post-Schedule Option Modal: Daily Pilot Planner vs Download Kit -->
+  <div class="schedule-success-modal" id="schedule-success-modal" style="display: none;">
+    <div class="schedule-modal-backdrop" id="schedule-modal-backdrop"></div>
+    <div class="schedule-modal-card">
+      <div class="schedule-modal-icon">🚀</div>
+      <h3 class="schedule-modal-title" id="schedule-modal-title">Test Flight Scheduled Successfully!</h3>
+      <p class="schedule-modal-desc" id="schedule-modal-desc">
+        Your test flight is locked. Choose how you would like to prepare:
+      </p>
+
+      <div class="schedule-options-list">
+        <a href="pilot-planner.html" class="schedule-option-item highlight-planner" id="modal-link-pilot-planner">
+          <div class="option-icon-box">🗓️</div>
+          <div class="option-info-box">
+            <div class="option-head-line">
+              <span class="option-title">Open Daily Pilot Planner</span>
+              <span class="option-recommended-tag">Recommended</span>
+            </div>
+            <p class="option-desc">Day-by-day roadmap till the day before exam with lectures, revision notes, practice problems &amp; checkpoint tests.</p>
+          </div>
+          <div class="option-arrow">→</div>
+        </a>
+
+        <button type="button" class="schedule-option-item highlight-todo" id="modal-link-flight-todo" style="background: none; border: 1.5px solid rgba(99, 102, 241, 0.25); width: 100%; text-align: left; cursor: pointer;">
+          <div class="option-icon-box">📋</div>
+          <div class="option-info-box">
+            <div class="option-head-line">
+              <span class="option-title">Open Flight To-Do Checklist</span>
+              <span class="option-recommended-tag" style="background: rgba(16, 185, 129, 0.15); color: #059669;">New</span>
+            </div>
+            <p class="option-desc">Interactive day-wise milestones, task checkoffs (+15 XP), and custom study goals right here in your dashboard.</p>
+          </div>
+          <div class="option-arrow">→</div>
+        </button>
+
+        <a href="download-kit.html" class="schedule-option-item highlight-kit" id="modal-link-download-kit">
+          <div class="option-icon-box">📦</div>
+          <div class="option-info-box">
+            <div class="option-head-line">
+              <span class="option-title">Download Mission Study Kit</span>
+            </div>
+            <p class="option-desc">Download complete CBT mock papers, high-yield formula booklets, and printable OMR sheets in one click.</p>
+          </div>
+          <div class="option-arrow">→</div>
+        </a>
+      </div>
+
+      <div class="schedule-modal-actions">
+        <button type="button" class="btn-close-schedule-modal" id="btn-close-schedule-modal">
+          Continue in Cockpit
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conductor-Inspired Luxury Editorial Footer -->
+  <footer class="conductor-footer" id="conductor-footer">
+    <div class="conductor-footer-inner">
+      <div class="conductor-footer-grid">
+        
+        <!-- Left Column: Brand & Interactive Newsletter -->
+        <div class="footer-brand-pane">
+          <a href="index.html" class="conductor-brand-wrap" title="PrepPilot Home">
+            <div class="conductor-logo-icon" aria-hidden="true">
+              <span class="logo-bar"></span>
+              <span class="logo-bar"></span>
+              <span class="logo-bar"></span>
+            </div>
+            <span class="conductor-brand-name">PrepPilot</span>
+          </a>
+          
+          <p class="conductor-brand-tagline">
+            The modern cockpit for competitive exams &amp; board mastery.
+          </p>
+
+          <div class="footer-newsletter-box">
+            <p class="newsletter-desc">
+              Subscribe to our weekly study dispatch for high-yield formula sheets, exam alerts, and topper insights.
+            </p>
+
+            <form class="footer-pill-input-wrap" id="conductor-newsletter-form">
+              <input 
+                type="email" 
+                class="footer-email-input" 
+                id="conductor-newsletter-email" 
+                placeholder="Your email" 
+                required 
+                aria-label="Email address for weekly dispatch"
+              >
+              <button type="submit" class="btn-newsletter-submit" id="btn-newsletter-submit">
+                Submit
+              </button>
+            </form>
+
+            <div class="newsletter-consent-row">
+              <input type="checkbox" id="conductor-newsletter-consent" class="consent-checkbox" required>
+              <label for="conductor-newsletter-consent">
+                By submitting, you agree to our <a href="#privacy">Terms of Service</a> and <a href="#privacy">Privacy Policy</a>.
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: 3-Column Navigation Directory -->
+        <div class="footer-cols-grid">
+          
+          <!-- Column 1: Curriculum -->
+          <div class="footer-nav-col">
+            <h4 class="footer-nav-col-title">Curriculum</h4>
+            <ul class="footer-nav-links-list">
+              <li><a href="index.html#curriculum">Class 6th–10th CBSE</a></li>
+              <li><a href="index.html#curriculum">Class 6th–10th ICSE</a></li>
+              <li><a href="index.html#curriculum">11th &amp; 12th Board Booster</a></li>
+              <li><a href="index.html#curriculum">IIT-JEE Main &amp; Advanced</a></li>
+              <li><a href="index.html#curriculum">NEET-UG Medical 360</a></li>
+              <li><a href="index.html#curriculum">Dropper &amp; Repeaters</a></li>
+              <li><a href="pilot-planner.html">Daily Pilot Planner</a></li>
+            </ul>
+          </div>
+
+          <!-- Column 2: Cockpit -->
+          <div class="footer-nav-col">
+            <h4 class="footer-nav-col-title">Cockpit</h4>
+            <ul class="footer-nav-links-list">
+              <li><a href="dashboard.html">Student Flight Deck</a></li>
+              <li><a href="dashboard.html">3D Practical Visualizers</a></li>
+              <li><a href="dashboard.html">National Mock Calendar</a></li>
+              <li><a href="dashboard.html">Syllabus Radar</a></li>
+              <li><a href="download-kit.html">Study Kits &amp; OMRs</a></li>
+              <li><a href="pilot-planner.html">Flight Mission Plan</a></li>
+            </ul>
+          </div>
+
+          <!-- Column 3: Legal & Standards -->
+          <div class="footer-nav-col">
+            <h4 class="footer-nav-col-title">Legal</h4>
+            <ul class="footer-nav-links-list">
+              <li><a href="#privacy">Terms of Service</a></li>
+              <li><a href="#privacy">Privacy Policy</a></li>
+              <li><a href="#privacy">Student Honor Code</a></li>
+              <li><a href="#privacy">Encrypted Security</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Copyright Row -->
+      <div class="conductor-copyright-row">
+        <span>© 2026 PrepPilot Technologies Inc. All rights reserved.</span>
+        <span class="footer-status-indicator">All Systems Operational</span>
+      </div>
+
+      <!-- Signature Giant Bottom Watermark (Identical to Conductor Footer Base) -->
+      <div class="conductor-watermark-wrap" aria-hidden="true">
+        <div class="watermark-logo-bars">
+          <span class="w-bar"></span>
+          <span class="w-bar"></span>
+          <span class="w-bar"></span>
+        </div>
+        <span class="watermark-text">PrepPilot</span>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Floating Toast Notification -->
+  <div class="cockpit-toast" id="cockpit-toast"></div>
+
+  <!-- Scripts -->
+  <script src="js/account-manager.js"></script>
+  <script src="js/class_syllabus_registry.js"></script>
+  <script src="js/cursor.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/nav-course-selector.js"></script>
+  <script src="js/conductor-footer.js"></script>
+</body>
+</html>
+

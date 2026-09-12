@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrepPilot | Master CBSE, ICSE, JEE & NEET Smarter</title>
+  <meta name="description" content="PrepPilot: Next-generation motion-powered learning for CBSE & ICSE (Classes 6th–10th) and 11th, 12th & Dropper competitive exam prep.">
+
+  <!-- Modern Typography (Editorial Serif & Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/conductor-theme.css">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+</head>
+<body>
+
+  <!-- Ambient Light Blobs -->
+  <div class="ambient-scene" aria-hidden="true">
+    <div class="ambient-blob-1"></div>
+    <div class="ambient-blob-2"></div>
+  </div>
+
+  <canvas id="liquid-bg-canvas"></canvas>
+
+  <div class="app-wrapper">
+
+    <!-- Centered Floating Pill Navigation (Like Reference Video) -->
+    <header class="site-header">
+      <nav class="nav-glass-bar" aria-label="Main Navigation">
+        <a href="#" class="brand-anchor" title="PrepPilot">
+          <div class="brand-icon-box">
+            <img src="assets/logo.png" alt="PrepPilot" class="brand-icon-img preppilot-logo">
+          </div>
+          <span class="brand-wordmark">PrepPilot</span>
+        </a>
+
+        <!-- Main Menu Interactive Course & Class Switcher -->
+        <div class="nav-course-selector-wrap" id="nav-course-selector">
+          <button type="button" class="btn-nav-course-pill" id="btn-nav-course" aria-expanded="false" aria-haspopup="true" title="Change your course and class">
+            <span class="nav-course-dot"></span>
+            <span class="nav-course-text" id="nav-active-course-label">Class 10th • CBSE Board</span>
+            <span class="nav-course-chevron">▼</span>
+          </button>
+
+          <!-- Interactive Course & Class Dropdown Flyout -->
+          <div class="nav-course-dropdown" id="nav-course-dropdown" role="menu">
+            <div class="nav-course-head">
+              <div class="nav-course-head-tag">🎓 Quick Curriculum Switcher</div>
+              <div class="nav-course-head-title">Change Course &amp; Class</div>
+              <p class="nav-course-head-sub">Select your target grade and stream. Changes apply immediately across your dashboard.</p>
+            </div>
+
+            <!-- 1. Grade / Class Choice -->
+            <div class="nav-course-section-title">1. Select Academic Class</div>
+            <div class="nav-class-pills-row" id="nav-class-pills">
+              <button type="button" class="nav-class-btn" data-class="6th">6th</button>
+              <button type="button" class="nav-class-btn" data-class="7th">7th</button>
+              <button type="button" class="nav-class-btn" data-class="8th">8th</button>
+              <button type="button" class="nav-class-btn" data-class="9th">9th</button>
+              <button type="button" class="nav-class-btn active" data-class="10th">10th</button>
+              <button type="button" class="nav-class-btn" data-class="11th">11th</button>
+              <button type="button" class="nav-class-btn" data-class="12th">12th</button>
+              <button type="button" class="nav-class-btn" data-class="Dropper">Dropper</button>
+            </div>
+
+            <!-- 2. Course Stream Choice (Dynamic) -->
+            <div class="nav-course-section-title">2. Select Target Course</div>
+            <div class="nav-streams-grid" id="nav-streams-grid">
+              <!-- Dynamically populated based on chosen grade -->
+            </div>
+
+            <!-- 3. Actions -->
+            <div class="nav-course-footer">
+              <span class="nav-course-hint" id="nav-course-hint">Syncs with cockpit &amp; mascot</span>
+              <button type="button" class="btn-nav-apply-course" id="btn-nav-apply-course">
+                Apply Course ✓
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <ul class="nav-links-row">
+          <li><a href="#curriculum" class="nav-link">Curriculum</a></li>
+          <li><a href="#auth-cockpit" class="nav-link">Simulator</a></li>
+        </ul>
+
+        <div>
+          <a href="dashboard.html" class="btn-nav-action" title="Open Student Cockpit">
+            Enter Cockpit →
+          </a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Main Hero Section (Layout & Composition matching Reference Video) -->
+    <main class="hero-wrapper">
+
+      <!-- Social Proof Pill Badge -->
+      <div class="social-proof-pill">
+        <div class="avatar-stack">
+          <span class="avatar-micro">A</span>
+          <span class="avatar-micro">P</span>
+          <span class="avatar-micro">R</span>
+        </div>
+        <div class="stars-rating">★★★★★</div>
+        <span class="proof-text">Trusted by over <strong>500k+ learners</strong></span>
+      </div>
+
+      <!-- Animated Headline with 3D Word Flipper -->
+      <h1 class="hero-title">
+        Learn <span class="word-flipper-pill" id="rotating-word-pill"><span id="rotating-word-text">CBSE &amp; ICSE</span></span><br>by scrolling smarter
+      </h1>
+
+      <p class="hero-subtitle">
+        PrepPilot makes board excellence and competitive prep feel effortless — quick animated visualizers, real-time tests, and bite-sized practice every day.
+      </p>
+
+      <!-- 1-Click Social Login Buttons (Google, GitHub, Twitter) Styled as Store Pills -->
+      <div class="social-login-row" id="auth-buttons">
+
+        <!-- Google Sign-In -->
+        <button type="button" class="btn-store-style" data-provider="google" title="Sign in with Google">
+          <span class="btn-store-icon">
+            <svg viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+              <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+            </svg>
+          </span>
+          <div class="btn-store-labels">
+            <span class="store-subtitle">Continue with</span>
+            <span class="store-title">Google</span>
+          </div>
+        </button>
+
+        <!-- GitHub Sign-In -->
+        <button type="button" class="btn-store-style" data-provider="github" title="Sign in with GitHub">
+          <span class="btn-store-icon">
+            <svg viewBox="0 0 24 24" fill="#ffffff">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+            </svg>
+          </span>
+          <div class="btn-store-labels">
+            <span class="store-subtitle">Continue with</span>
+            <span class="store-title">GitHub</span>
+          </div>
+        </button>
+
+        <!-- Twitter / X Sign-In -->
+        <button type="button" class="btn-store-style" data-provider="twitter" title="Sign in with Twitter / X">
+          <span class="btn-store-icon">
+            <svg viewBox="0 0 24 24" fill="#ffffff">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </span>
+          <div class="btn-store-labels">
+            <span class="store-subtitle">Continue with</span>
+            <span class="store-title">Twitter / X</span>
+          </div>
+        </button>
+
+      </div>
+
+      <!-- Centerpiece Character & Curved Orbital Track (Identical to Reference!) -->
+      <section class="mascot-stage" aria-label="Interactive Mascot Showcase">
+
+        <!-- Curved Dotted Orbital Trajectory -->
+        <svg class="orbital-arc-canvas" viewBox="0 0 1000 360" fill="none">
+          <path d="M 60 300 Q 500 -20 940 300" stroke="rgba(99, 102, 241, 0.22)" stroke-width="2.5" stroke-dasharray="8 8" />
+        </svg>
+
+        <!-- 4 Core Floating 3D Cubes (CBSE, ICSE, JEE, NEET) -->
+        <div class="floating-cube cube-pos-cbse" title="CBSE Board (Classes 6th–10th)">
+          <span class="cube-flag-icon">📘</span>
+          <span class="cube-label">CBSE</span>
+        </div>
+
+        <div class="floating-cube cube-pos-icse" title="ICSE Council (Classes 6th–10th)">
+          <span class="cube-flag-icon">🏛️</span>
+          <span class="cube-label">ICSE</span>
+        </div>
+
+        <div class="floating-cube cube-pos-jee" title="JEE Main & Advanced">
+          <span class="cube-flag-icon">⚡</span>
+          <span class="cube-label">JEE</span>
+        </div>
+
+        <div class="floating-cube cube-pos-neet" title="NEET-UG Medical">
+          <span class="cube-flag-icon">🩺</span>
+          <span class="cube-label">NEET</span>
+        </div>
+
+        <!-- Dynamic Speech Bubble (Like "Hola" in reference!) -->
+        <div class="mascot-speech-bubble" id="mascot-speech" title="Click to chat!">
+          ✨ Concept Cleared!
+        </div>
+
+        <!-- Central 3D Interactive Mascot Character -->
+        <div class="mascot-character-container glow-junior" id="mascot-container">
+          <!-- Glowing Aura Behind Illuminated Book -->
+          <div class="mascot-book-glow"></div>
+
+          <!-- Stardust Specks Floating Upwards -->
+          <div class="floating-stardust dust-1">✦</div>
+          <div class="floating-stardust dust-2">✦</div>
+          <div class="floating-stardust dust-3">✦</div>
+
+          <!-- Dynamic Floating Knowledge Formulas -->
+          <span class="book-formula-particle f-particle-1" id="f-particle-1">E=mc²</span>
+          <span class="book-formula-particle f-particle-2" id="f-particle-2">∫ x·dx</span>
+          <span class="book-formula-particle f-particle-3" id="f-particle-3">F = m·a</span>
+
+          <div class="mascot-3d-card" id="mascot-3d-card" title="Click me for a boost!">
+            <img src="assets/mascot.png" alt="PrepPilot 3D Mascot" class="mascot-3d-img" id="mascot-3d-img">
+
+            <!-- Interactive Kid Rig: Eyes, Book, Hands, Head & Sneakers -->
+            <div class="kid-interactive-rig" id="kid-interactive-rig">
+
+
+              <!-- 2. Interactive Head & Glasses Zone -->
+              <div class="kid-head-target" id="kid-head-zone" title="Tap head for Brainpower Focus Boost!">
+                <div class="kid-glasses-shimmer" id="glasses-shimmer"></div>
+              </div>
+
+              <!-- 3. Interactive Book Zone with Hologram Beam & Chapter Badge -->
+              <div class="kid-book-zone" id="kid-interactive-book" title="Click to flip chapter & formulas!">
+                <div class="kid-book-chapter" id="kid-book-chapter">Ch. 4: Physics Mechanics</div>
+                <div class="book-page-flipper"></div>
+                <div class="book-click-hint">Click to flip ↷</div>
+              </div>
+
+              <!-- Hologram Projector Beam above Book -->
+              <div class="kid-holo-beam" id="kid-holo-beam">
+                <div class="holo-beam-light"></div>
+                <div class="holo-spinning-atom">
+                  <div class="atom-ring atom-ring-1"></div>
+                  <div class="atom-ring atom-ring-2"></div>
+                  <div class="atom-ring atom-ring-3"></div>
+                </div>
+              </div>
+
+              <!-- 4. Interactive Hands (Left: High-Five, Right: Speed Notes) -->
+              <div class="kid-hand-target kid-hand-l" id="kid-hand-left" title="Give me a High Five!">
+                <span class="hand-hover-badge">🖐️ High Five!</span>
+              </div>
+              <div class="kid-hand-target kid-hand-r" id="kid-hand-right" title="Tap for fast formula notes!">
+                <span class="hand-hover-badge">✍️ Quick Notes!</span>
+              </div>
+
+              <!-- 5. Interactive Sneakers (Sprint Practice Mode) -->
+              <div class="kid-sneaker-target sneaker-left" id="kid-sneaker-left" title="Tap sneaker for Sprint Mode!"></div>
+              <div class="kid-sneaker-target sneaker-right" id="kid-sneaker-right" title="Tap sneaker for Sprint Mode!"></div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Floor Soft Shadow -->
+        <div class="mascot-floor-shadow"></div>
+
+      </section>
+
+      <!-- PrepPilot Cockpit Gateway (Combined from previous actions) -->
+      <section class="cockpit-gateway-section" id="auth-cockpit">
+        <div class="cockpit-glass-card">
+          <div class="auth-header-mini">
+            <div class="auth-badge-icon">
+              <img src="assets/logo.png" alt="PrepPilot" class="preppilot-logo">
+            </div>
+            <h2 class="auth-header-title">PrepPilot Cockpit Access</h2>
+            <p class="auth-header-sub">Select your academic track to enter your personalized dashboard</p>
+          </div>
+
+          <!-- Quick Wing Selector Tabs -->
+          <div class="auth-track-tabs" role="tablist">
+            <button type="button" class="track-select-btn active" data-track="Class 6th–10th (CBSE &amp; ICSE)">Class 6–10th</button>
+            <button type="button" class="track-select-btn" data-track="Class 11th–12th &amp; Boards">11th / 12th</button>
+            <button type="button" class="track-select-btn" data-track="Droppers Competitive Batch">Droppers</button>
+          </div>
+
+          <!-- Dynamic Track Perks Banner -->
+          <div class="track-perks-banner" id="track-perks-banner">
+            📘 CBSE &amp; ICSE Foundation • Animated 3D Labs • Class 10 Board Booster
+          </div>
+
+          <!-- Interactive Prep Simulator Widget -->
+          <div class="prep-simulator-box">
+            <div class="sim-header">
+              <span class="sim-title">Interactive Target Score Simulator</span>
+              <span class="sim-target-badge" id="sim-score-badge">Target: 98.5%</span>
+            </div>
+            <input type="range" id="prep-target-slider" class="sim-slider" min="80" max="100" value="98.5" step="0.5" aria-label="Target Score">
+            <div class="sim-metrics-grid">
+              <div class="sim-metric-item">
+                <span class="sim-metric-val" id="sim-hours-val">180 hrs</span>
+                <span class="sim-metric-lbl">Video Masterclass</span>
+              </div>
+              <div class="sim-metric-item">
+                <span class="sim-metric-val" id="sim-drills-val">45 Qs/day</span>
+                <span class="sim-metric-lbl">Adaptive Practice</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1-Click Social Sign-In Options -->
+          <div class="auth-social-buttons">
+            <!-- Google -->
+            <button type="button" class="btn-social-item btn-social-google" data-provider="google">
+              <span class="btn-social-icon">
+                <svg viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                  <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+                  <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                  <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                </svg>
+              </span>
+              <span>Continue with Google</span>
+            </button>
+
+            <!-- GitHub -->
+            <button type="button" class="btn-social-item btn-social-github" data-provider="github">
+              <span class="btn-social-icon">
+                <svg viewBox="0 0 24 24" fill="#ffffff">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                </svg>
+              </span>
+              <span>Continue with GitHub</span>
+            </button>
+
+            <!-- Twitter / X -->
+            <button type="button" class="btn-social-item btn-social-twitter" data-provider="twitter">
+              <span class="btn-social-icon">
+                <svg viewBox="0 0 24 24" fill="#ffffff">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </span>
+              <span>Continue with Twitter / X</span>
+            </button>
+          </div>
+
+          <!-- Divider -->
+          <div class="auth-sub-divider">
+            <span>or student roll / email</span>
+          </div>
+
+          <!-- Quick Form -->
+          <form class="quick-id-form" id="quick-auth-form" action="dashboard.html" method="GET">
+            <div style="display: flex; gap: 8px; width: 100%;">
+              <input type="text" name="student" id="student-id-input" class="input-glass-field" placeholder="Student Roll No. or Name" value="Arjun Sharma" required style="flex: 1;">
+              <button type="button" class="btn-new-account-pill" id="btn-create-new-account" title="Setup a New Account" style="background: rgba(99, 102, 241, 0.12); color: #6366f1; border: 1px solid rgba(99, 102, 241, 0.25); border-radius: 12px; font-weight: 700; font-size: 0.78rem; padding: 0 14px; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px;">
+                <span>+ New Account</span>
+              </button>
+            </div>
+            <button type="submit" class="btn-id-submit">Enter Student Cockpit →</button>
+          </form>
+
+          <div class="auth-reassurance">
+            <span>🔒 Protected by 256-Bit SSL • CBSE &amp; ICSE Synchronized</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Academic Curriculum Segment (All 3 Wings from Previous Actions) -->
+      <section class="curriculum-segment" id="curriculum">
+        <div class="segment-nav-tabs">
+          <button type="button" class="tab-pill-btn active" data-tab="tab-junior">
+            Junior Wing (Classes 6th–10th)
+          </button>
+          <button type="button" class="tab-pill-btn" data-tab="tab-senior">
+            Senior Wing (11th–12th Boards + JEE/NEET)
+          </button>
+          <button type="button" class="tab-pill-btn" data-tab="tab-dropper">
+            Droppers &amp; Repeaters Batch
+          </button>
+        </div>
+
+        <!-- Junior Wing Content -->
+        <div class="segment-tab-content active" id="tab-junior">
+          <div class="tracks-minimal-grid">
+            <div class="track-minimal-card">
+              <div>
+                <span class="track-card-badge badge-blue">CBSE Board</span>
+                <h3 class="track-card-title">Class 6th–10th CBSE</h3>
+                <p class="track-card-desc">NCERT line-by-line animations, conceptual science labs, and Class 10 board question bank.</p>
+              </div>
+              <a href="#auth-cockpit" class="track-action-link" data-provider="google">Enroll in CBSE Wing →</a>
+            </div>
+
+            <div class="track-minimal-card">
+              <div>
+                <span class="track-card-badge badge-purple">ICSE Council</span>
+                <h3 class="track-card-title">Class 6th–10th ICSE</h3>
+                <p class="track-card-desc">Analytical Selina and Concise mastery, rigorous answer-writing clinics, and literature breakdown.</p>
+              </div>
+              <a href="#auth-cockpit" class="track-action-link" data-provider="google">Enroll in ICSE Wing →</a>
+            </div>
+
+            <div class="track-minimal-card">
+              <div>
+                <span class="track-card-badge badge-orange">Talent Search</span>
+                <h3 class="track-card-title">Olympiads &amp; NTSE</h3>
+                <p class="track-card-desc">Advanced logical reasoning and mental agility for PRMO, NSO, IMO, and national arenas.</p>
+              </div>
+              <a href="#auth-cockpit" class="track-action-link" data-provider="google">Explore Olympiad Wing →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Senior Wing Content -->
+        <div class="segment-tab-content" id="tab-senior">
+          <div class="tracks-minimal-grid">
+            <div class="track-minimal-card">
+              <div>
+                <span class="track-card-badge badge-blue">12th Boards</span>
+                <h3 class="track-card-title">Board Score Booster</h3>
+                <p class="track-card-desc">95%+ guaranteed scoring blueprint for CBSE &amp; ISC. Formal step marking and past 15 years solved papers.</p>
+              </div>
+              <a href="#auth-cockpit" class="track-action-link" data-provider="google">Unlock Board Topper Track →</a>
+            </div>
+
+            <div class="track-minimal-card">
+              <div>
+                <span class="track-card-badge badge-orange">IIT-JEE Wing</span>
+                <h3 class="track-card-title">JEE Main &amp; Advanced</h3>
+                <p class="track-card-desc">Deep conceptual mastery, HC Verma/Irodov problem solving, and full NTA computer-based mock exams.</p>
+              </div>
+              <a href="#auth-cockpit" class="track-action-link" data-provider="google">Join JEE Aspirant Wing →</a>
+            </div>
+
+            <div class="track-minimal-card">
+              <div>
+                <span class="track-card-badge badge-purple">Medical Track</span>
+                <h3 class="track-card-title">NEET-UG 360/360 Medical</h3>
+                <p class="track-card-desc">NCERT Biology 360/360 decoders, high-speed numerical shortcuts, and OMR test simulation.</p>
+              </div>
+              <a href="#auth-cockpit" class="track-action-link" data-provider="google">Join NEET Medical Wing →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Droppers & Repeaters Content -->
+        <div class="segment-tab-content" id="tab-dropper">
+          <div class="tracks-minimal-grid">
+            <div class="track-minimal-card">
+              <div>
+                <span class="track-card-badge badge-orange">JEE Droppers</span>
+                <h3 class="track-card-title">JEE Rank Accelerator</h3>
+                <p class="track-card-desc">180-day hyper-sprint covering full 11th and 12th syllabi with daily benchmark drills and IITian mentoring.</p>
+              </div>
+              <a href="#auth-cockpit" class="track-action-link" data-provider="google">Join JEE Dropper Batch →</a>
+            </div>
+
+            <div class="track-minimal-card">
+              <div>
+                <span class="track-card-badge badge-purple">NEET Repeaters</span>
+                <h3 class="track-card-title">NEET 680+ Repeaters</h3>
+                <p class="track-card-desc">Targeting top Government Medical Colleges (AIIMS, JIPMER, MAMC) with intensive NCERT revision and error healing.</p>
+              </div>
+              <a href="#auth-cockpit" class="track-action-link" data-provider="google">Join NEET Repeater Batch →</a>
+            </div>
+
+            <div class="track-minimal-card">
+              <div>
+                <span class="track-card-badge badge-blue">Board Upgrade</span>
+                <h3 class="track-card-title">12th Board Improver</h3>
+                <p class="track-card-desc">Tailored for candidates targeting the 75% JEE eligibility criteria or upgrading marks to distinction.</p>
+              </div>
+              <a href="#auth-cockpit" class="track-action-link" data-provider="google">Join Board Improver Batch →</a>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Atmospheric Golden-Horizon CTA Section (Conductor Theme) -->
+    <section class="conductor-cta-section" id="cta-flight-ready">
+      <div class="conductor-cta-inner">
+        <h2 class="conductor-serif-heading">Ready to launch your first test flight?</h2>
+        <p class="conductor-subtext">Get started free. All academic classes &amp; competitive tracks included.</p>
+        <a href="#auth-cockpit" class="btn-conductor-pill" data-provider="google" title="Enter Student Cockpit">
+          Launch Cockpit →
+        </a>
+      </div>
+    </section>
+
+    <!-- Simulated Authentication Modal -->
+    <div class="auth-modal-overlay" id="auth-modal" role="dialog" aria-modal="true">
+      <div class="auth-modal-box">
+        <button type="button" class="modal-close-btn" id="modal-close-btn" aria-label="Close">✕</button>
+
+        <div class="modal-icon-orbit">
+          <div class="modal-spinner"></div>
+          <div id="modal-provider-icon" class="modal-provider-icon"></div>
+        </div>
+
+        <h3 class="modal-title" id="modal-title">Connecting to Google</h3>
+        <p class="modal-status-text" id="modal-status">Establishing encrypted handshake...</p>
+
+        <div class="modal-progress-track">
+          <div class="modal-progress-fill" id="modal-progress"></div>
+        </div>
+
+        <!-- Simulated Student Account Preview Card -->
+        <div class="modal-user-preview" id="modal-user-preview" style="display: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 0.85rem; text-align: left; margin-bottom: 1.2rem; align-items: center; gap: 0.8rem;">
+          <div class="modal-avatar" style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #6366f1, #0ea5e9); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center;">P</div>
+          <div>
+            <h5 id="modal-user-name" style="font-size: 0.88rem; font-weight: 700; color: #0f172a; margin: 0;">Student Pilot</h5>
+            <p id="modal-user-sub" style="font-size: 0.74rem; color: #64748b; margin: 0;">Enrolled: Class 6th–10th (CBSE &amp; ICSE)</p>
+          </div>
+        </div>
+
+        <button type="button" class="btn-store-style" style="width: 100%; justify-content: center;" onclick="document.getElementById('auth-modal').classList.remove('active'); window.location.href='#curriculum';">
+          Enter Student Cockpit →
+        </button>
+      </div>
+    </div>
+
+    <!-- Floating Logo Tool for User -->
+    <div class="logo-upload-drawer">
+      <input type="file" id="logo-file-input" accept="image/*" style="display: none;">
+      <button type="button" class="btn-floating-logo-tool" id="btn-logo-tool" title="Change Logo">
+        <span>Change Logo</span>
+      </button>
+    </div>
+
+    <!-- Conductor-Inspired Luxury Editorial Footer -->
+    <footer class="conductor-footer" id="conductor-footer">
+      <div class="conductor-footer-inner">
+        <div class="conductor-footer-grid">
+
+          <!-- Left Column: Brand & Interactive Newsletter -->
+          <div class="footer-brand-pane">
+            <a href="#" class="conductor-brand-wrap" title="PrepPilot">
+              <div class="conductor-logo-icon" aria-hidden="true">
+                <span class="logo-bar"></span>
+                <span class="logo-bar"></span>
+                <span class="logo-bar"></span>
+              </div>
+              <span class="conductor-brand-name">PrepPilot</span>
+            </a>
+
+            <p class="conductor-brand-tagline">
+              The modern cockpit for competitive exams &amp; board mastery.
+            </p>
+
+            <div class="footer-newsletter-box">
+              <p class="newsletter-desc">
+                Subscribe to our weekly study dispatch for high-yield formula sheets, exam alerts, and topper insights.
+              </p>
+
+              <form class="footer-pill-input-wrap" id="conductor-newsletter-form">
+                <input
+                  type="email"
+                  class="footer-email-input"
+                  id="conductor-newsletter-email"
+                  placeholder="Your email"
+                  required
+                  aria-label="Email address for weekly dispatch"
+                >
+                <button type="submit" class="btn-newsletter-submit" id="btn-newsletter-submit">
+                  Submit
+                </button>
+              </form>
+
+              <div class="newsletter-consent-row">
+                <input type="checkbox" id="conductor-newsletter-consent" class="consent-checkbox" required>
+                <label for="conductor-newsletter-consent">
+                  By submitting, you agree to our <a href="#privacy">Terms of Service</a> and <a href="#privacy">Privacy Policy</a>.
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: 3-Column Navigation Directory -->
+          <div class="footer-cols-grid">
+
+            <!-- Column 1: Curriculum -->
+            <div class="footer-nav-col">
+              <h4 class="footer-nav-col-title">Curriculum</h4>
+              <ul class="footer-nav-links-list">
+                <li><a href="#curriculum">Class 6th–10th CBSE</a></li>
+                <li><a href="#curriculum">Class 6th–10th ICSE</a></li>
+                <li><a href="#curriculum">11th &amp; 12th Board Booster</a></li>
+                <li><a href="#curriculum">IIT-JEE Main &amp; Advanced</a></li>
+                <li><a href="#curriculum">NEET-UG Medical 360</a></li>
+                <li><a href="#curriculum">Dropper &amp; Repeaters</a></li>
+                <li><a href="dashboard.html">Daily Pilot Planner</a></li>
+              </ul>
+            </div>
+
+            <!-- Column 2: Cockpit -->
+            <div class="footer-nav-col">
+              <h4 class="footer-nav-col-title">Cockpit</h4>
+              <ul class="footer-nav-links-list">
+                <li><a href="dashboard.html">Student Flight Deck</a></li>
+                <li><a href="dashboard.html">3D Practical Visualizers</a></li>
+                <li><a href="dashboard.html">National Mock Calendar</a></li>
+                <li><a href="dashboard.html">Syllabus Radar</a></li>
+                <li><a href="download-kit.html">Study Kits &amp; OMRs</a></li>
+                <li><a href="pilot-planner.html">Flight Mission Plan</a></li>
+              </ul>
+            </div>
+
+            <!-- Column 3: Legal & Standards -->
+            <div class="footer-nav-col">
+              <h4 class="footer-nav-col-title">Legal</h4>
+              <ul class="footer-nav-links-list">
+                <li><a href="#privacy">Terms of Service</a></li>
+                <li><a href="#privacy">Privacy Policy</a></li>
+                <li><a href="#privacy">Student Honor Code</a></li>
+                <li><a href="#privacy">Encrypted Security</a></li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Copyright Row -->
+        <div class="conductor-copyright-row">
+          <span>© 2026 PrepPilot Technologies Inc. All rights reserved.</span>
+          <span class="footer-status-indicator">All Systems Operational</span>
+        </div>
+
+        <!-- Signature Giant Bottom Watermark (Identical to Conductor Footer Base) -->
+        <div class="conductor-watermark-wrap" aria-hidden="true">
+          <div class="watermark-logo-bars">
+            <span class="w-bar"></span>
+            <span class="w-bar"></span>
+            <span class="w-bar"></span>
+          </div>
+          <span class="watermark-text">PrepPilot</span>
+        </div>
+
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Floating Toast Notification -->
+  <div class="site-toast" id="site-toast"></div>
+
+  <!-- Scripts -->
+  <script src="js/account-manager.js"></script>
+  <script src="js/liquid-canvas.js"></script>
+  <script src="js/cursor.js"></script>
+  <script src="js/kid-interactive.js"></script>
+  <script src="js/motion.js"></script>
+  <script src="js/auth-portal.js"></script>
+  <script src="js/nav-course-selector.js"></script>
+  <script src="js/conductor-footer.js"></script>
+</body>
+</html>

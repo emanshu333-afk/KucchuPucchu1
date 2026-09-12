@@ -1,0 +1,701 @@
+/**
+ * PrepPilot - Test Flight Download Kit & Materials Hub
+ * Cockpit Glassmorphism & High-Contrast Modern Theme
+ */
+
+:root {
+  --kit-bg: #0b0f19;
+  --kit-surface: #131b2e;
+  --kit-surface-card: #1a243d;
+  --kit-surface-hover: #223052;
+  --kit-border: rgba(255, 255, 255, 0.08);
+  --kit-border-focus: rgba(99, 102, 241, 0.5);
+  --kit-text: #f8fafc;
+  --kit-text-muted: #94a3b8;
+  --kit-accent-blue: #38bdf8;
+  --kit-accent-indigo: #6366f1;
+  --kit-accent-emerald: #10b981;
+  --kit-accent-amber: #f59e0b;
+}
+
+body.kit-body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #0b0f19 55%, #05070d 100%);
+  color: var(--kit-text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   1. Navigation Topbar
+   ========================================================================== */
+.kit-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(11, 15, 25, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--kit-border);
+  padding: 12px 24px;
+}
+
+.kit-header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.kit-brand-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.kit-brand-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+.kit-brand-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #4f46e5, #06b6d4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 0 16px rgba(79, 70, 229, 0.4);
+}
+
+.kit-mission-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 9999px;
+  color: var(--kit-accent-blue);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.kit-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-back-dashboard {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--kit-border);
+  color: #e2e8f0;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.btn-back-dashboard:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  transform: translateX(-2px);
+}
+
+.btn-nav-pilot-planner,
+.btn-planner-kit-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.2));
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  color: #c084fc;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.btn-nav-pilot-planner:hover,
+.btn-planner-kit-link:hover {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.35), rgba(168, 85, 247, 0.35));
+  border-color: #c084fc;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(168, 85, 247, 0.25);
+}
+
+.kit-student-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--kit-border);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.kit-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #38bdf8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   2. Main Container & Hero Card
+   ========================================================================== */
+.kit-main-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+  width: 100%;
+  box-sizing: border-box;
+  flex: 1;
+}
+
+.kit-hero-card {
+  background: linear-gradient(145deg, rgba(26, 36, 61, 0.85), rgba(19, 27, 46, 0.95));
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.kit-hero-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.kit-hero-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.kit-hero-title-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.kit-subject-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(56, 189, 248, 0.25));
+  border: 1.5px solid rgba(56, 189, 248, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.kit-hero-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+}
+
+.kit-hero-subtitle {
+  font-size: 0.92rem;
+  color: var(--kit-text-muted);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.kit-meta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+/* Hero Stats Bar */
+.kit-hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  padding: 20px;
+  background: rgba(11, 15, 25, 0.5);
+  border: 1px solid var(--kit-border);
+  border-radius: 16px;
+  margin-bottom: 24px;
+}
+
+.kit-stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kit-stat-label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+}
+
+.kit-stat-value {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #f8fafc;
+}
+
+.kit-stat-value.highlight-blue {
+  color: var(--kit-accent-blue);
+}
+
+.kit-stat-value.highlight-emerald {
+  color: var(--kit-accent-emerald);
+}
+
+/* Selected Chapters Tag Bar */
+.kit-chapters-bar {
+  margin-top: 16px;
+}
+
+.kit-chapters-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.kit-chapters-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.kit-chapter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  color: #e0e7ff;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* Bulk Download Action Bar */
+.kit-bulk-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--kit-border);
+}
+
+.kit-bulk-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--kit-text-muted);
+  font-size: 0.85rem;
+.btn-modify-kit-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #fbbf24;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.btn-modify-kit-link:hover {
+  background: rgba(245, 158, 11, 0.25);
+  border-color: #f59e0b;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25);
+}
+
+.btn-download-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4f46e5, #06b6d4);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.95rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(79, 70, 229, 0.4);
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.btn-download-all:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.55);
+}
+
+.btn-download-all:active {
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   3. Download Section Controls & Filter Bar
+   ========================================================================== */
+.kit-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.kit-section-title-wrap h2 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 4px;
+  letter-spacing: -0.01em;
+}
+
+.kit-section-title-wrap p {
+  font-size: 0.85rem;
+  color: var(--kit-text-muted);
+  margin: 0;
+}
+
+.kit-filter-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.kit-filter-pill {
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--kit-border);
+  color: #cbd5e1;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.kit-filter-pill:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.kit-filter-pill.active {
+  background: rgba(99, 102, 241, 0.25);
+  border-color: var(--kit-accent-indigo);
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+}
+
+/* ==========================================================================
+   4. Download Resource Cards
+   ========================================================================== */
+.kit-downloads-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.kit-resource-card {
+  background: var(--kit-surface-card);
+  border: 1px solid var(--kit-border);
+  border-radius: 18px;
+  padding: 22px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  transition: all 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+}
+
+.kit-resource-card:hover {
+  background: var(--kit-surface-hover);
+  border-color: rgba(99, 102, 241, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.kit-card-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  flex: 1;
+}
+
+.kit-file-icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.icon-box-pdf {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+}
+
+.icon-box-zip {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #fbbf24;
+}
+
+.icon-box-cbt {
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+}
+
+.icon-box-notes {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34d399;
+}
+
+.kit-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.kit-card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.kit-card-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+}
+
+.kit-format-badge {
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.badge-pdf {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+}
+
+.badge-zip {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fcd34d;
+}
+
+.badge-cbt {
+  background: rgba(56, 189, 248, 0.2);
+  color: #7dd3fc;
+}
+
+.kit-card-desc {
+  font-size: 0.85rem;
+  color: var(--kit-text-muted);
+  margin: 0;
+  line-height: 1.45;
+}
+
+.kit-card-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.76rem;
+  color: #64748b;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.kit-card-meta-row span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.meta-verified {
+  color: var(--kit-accent-emerald);
+  font-weight: 700;
+}
+
+.kit-card-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.btn-download-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.86rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 140px;
+  justify-content: center;
+}
+
+.btn-download-item:hover {
+  background: var(--kit-accent-indigo);
+  border-color: var(--kit-accent-indigo);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-download-item.downloading {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: var(--kit-accent-blue);
+  color: var(--kit-accent-blue);
+  pointer-events: none;
+}
+
+.btn-download-item.downloaded {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: var(--kit-accent-emerald);
+  color: var(--kit-accent-emerald);
+}
+
+/* ==========================================================================
+   5. Backend Notice Banner
+   ========================================================================== */
+.kit-backend-notice-banner {
+  margin-top: 36px;
+  padding: 18px 22px;
+  background: rgba(19, 27, 46, 0.65);
+  border: 1px dashed rgba(99, 102, 241, 0.3);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--kit-text-muted);
+  font-size: 0.85rem;
+}
+
+.kit-backend-icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   6. Footer
+   ========================================================================== */
+.kit-footer {
+  border-top: 1px solid var(--kit-border);
+  padding: 24px;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.8rem;
+  background: rgba(5, 7, 13, 0.9);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .kit-hero-card {
+    padding: 22px;
+  }
+  .kit-resource-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .kit-card-right {
+    justify-content: flex-end;
+  }
+  .btn-download-item {
+    width: 100%;
+  }
+}

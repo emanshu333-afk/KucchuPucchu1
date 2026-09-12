@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--ooeeee bllle bllle-->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrepPilot | Flight Calibration &amp; Course Selection</title>
+  <meta name="description" content="Personalize your PrepPilot syllabus radar: choose your target class, board stream, and study goals.">
+
+  <!-- Modern Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/onboarding.css">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+</head>
+<body class="onboarding-page">
+
+  <!-- Ambient Light Scene -->
+  <div class="ambient-scene" aria-hidden="true">
+    <div class="ambient-blob-1"></div>
+    <div class="ambient-blob-2"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="onboarding-header">
+    <a href="index.html" class="onboarding-brand" title="Return to Landing Page">
+      <div class="onboarding-logo-box">
+        <img src="assets/logo.png" alt="PrepPilot" class="onboarding-logo-img preppilot-logo">
+      </div>
+      <span class="onboarding-brand-name">PrepPilot</span>
+    </a>
+
+    <div class="onboarding-badge">
+      <span>🚀 First-Time Flight Calibration</span>
+    </div>
+  </header>
+
+  <!-- Main Content Card -->
+  <main class="onboarding-main">
+    <div class="onboarding-card">
+
+      <div class="onboarding-headline">
+        <div class="onboarding-pill-tag">
+          <span>⚡ One-Time Course Setup</span>
+        </div>
+        <h1 class="onboarding-title" id="onboard-welcome-title">Tailor Your Flight Path</h1>
+        <p class="onboarding-subtitle">
+          Select your class and preferred course track. We'll calibrate your dashboard once and automatically remember your progress on every visit.
+        </p>
+      </div>
+
+      <form id="onboarding-form">
+
+        <!-- Step 1: Select Target Class -->
+        <section class="setup-section">
+          <div class="section-label-row">
+            <span class="section-step-num">1</span>
+            <span class="section-label-text">Select Your Current Academic Class / Year</span>
+          </div>
+
+          <div class="class-pill-grid" id="class-selection-grid">
+            <div class="class-choice-pill" data-class="6th">
+              <span class="class-main-label">Class 6th</span>
+              <span class="class-sub-badge">Foundation</span>
+            </div>
+
+            <div class="class-choice-pill" data-class="7th">
+              <span class="class-main-label">Class 7th</span>
+              <span class="class-sub-badge">Foundation</span>
+            </div>
+
+            <div class="class-choice-pill" data-class="8th">
+              <span class="class-main-label">Class 8th</span>
+              <span class="class-sub-badge">Pre-Boards</span>
+            </div>
+
+            <div class="class-choice-pill" data-class="9th">
+              <span class="class-main-label">Class 9th</span>
+              <span class="class-sub-badge">Pre-Boards</span>
+            </div>
+
+            <div class="class-choice-pill selected" data-class="10th">
+              <span class="class-main-label">Class 10th</span>
+              <span class="class-sub-badge">Board Exam ⭐</span>
+            </div>
+
+            <div class="class-choice-pill" data-class="11th">
+              <span class="class-main-label">Class 11th</span>
+              <span class="class-sub-badge">Senior Prep</span>
+            </div>
+
+            <div class="class-choice-pill" data-class="12th">
+              <span class="class-main-label">Class 12th</span>
+              <span class="class-sub-badge">Boards + Entrance ⭐</span>
+            </div>
+
+            <div class="class-choice-pill" data-class="Dropper">
+              <span class="class-main-label">Droppers</span>
+              <span class="class-sub-badge">Rank Booster 🚀</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Step 2: Choose Academic Board / Exam Stream -->
+        <section class="setup-section">
+          <div class="section-label-row">
+            <span class="section-step-num">2</span>
+            <span class="section-label-text">Choose Your Preferred Course &amp; Stream</span>
+          </div>
+
+          <div class="course-options-list" id="course-options-list">
+            <!-- Dynamically populated based on chosen class -->
+          </div>
+        </section>
+
+        <!-- Step 3: Target Score & Daily Study Commitment -->
+        <section class="setup-section">
+          <div class="section-label-row">
+            <span class="section-step-num">3</span>
+            <span class="section-label-text">Set Your Target Goal &amp; Flight Hours</span>
+          </div>
+
+          <div class="target-slider-box">
+            <div class="target-header-row">
+              <span class="target-title">Target Board / Percentile Score</span>
+              <span class="target-badge" id="target-score-badge">Target: 98.5%</span>
+            </div>
+            <input type="range" class="target-range-slider" id="onboard-slider" min="85" max="100" value="98.5" step="0.5" aria-label="Target Score">
+
+            <div style="margin-top: 14px; margin-bottom: 8px; font-size: 0.84rem; font-weight: 700; color: var(--text-secondary);">
+              Daily Study Flight Commitment:
+            </div>
+            <div class="daily-hours-row" id="hours-selection-row">
+              <div class="hours-pill" data-hours="1.5">1–2 hrs / day (Steady)</div>
+              <div class="hours-pill selected" data-hours="3.0">3–4 hrs / day (Fast Track ⭐)</div>
+              <div class="hours-pill" data-hours="5.0">5+ hrs / day (Hyper Sprint)</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-launch-cockpit-submit" id="btn-submit-onboard">
+          <span>Confirm Course &amp; Launch Cockpit 🚀</span>
+        </button>
+
+      </form>
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="js/account-manager.js"></script>
+  <script src="js/cursor.js"></script>
+  <script src="js/onboarding.js"></script>
+</body>
+</html>

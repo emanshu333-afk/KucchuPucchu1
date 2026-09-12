@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrepPilot | Get Started &amp; Student Cockpit Access</title>
+  <meta name="description" content="Enter your PrepPilot student cockpit. CBSE, ICSE, JEE &amp; NEET personalized flight decks, 3D practical labs and daily mock tests.">
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+</head>
+<body class="login-body">
+
+  <div class="login-split-container">
+
+    <!-- ====================================================================
+         LEFT PANE: Speckled Canvas with Horizontal 3-Slide Journey
+         ==================================================================== -->
+    <div class="login-left-pane">
+      
+      <!-- Top Navigation & Stepper Pills -->
+      <div class="login-top-bar">
+        <a href="index.html" class="login-back-home" title="Back to PrepPilot Home">
+          <span>←</span>
+          <span>Back to Home</span>
+        </a>
+
+        <!-- Gen Z Slide Stepper Tabs -->
+        <div class="slide-stepper-pills" role="tablist" aria-label="Onboarding Steps">
+          <button type="button" class="stepper-pill-btn active" data-slide="0" id="step-pill-0">
+            <span class="pill-num">01</span>
+            <span>Superpowers</span>
+          </button>
+          <button type="button" class="stepper-pill-btn" data-slide="1" id="step-pill-1">
+            <span class="pill-num">02</span>
+            <span>Flight Plan</span>
+          </button>
+          <button type="button" class="stepper-pill-btn" data-slide="2" id="step-pill-2">
+            <span class="pill-num">03</span>
+            <span>Enter Cockpit</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Carousel Viewport & Track -->
+      <div class="login-carousel-viewport">
+        <div class="login-slides-track" id="login-slides-track">
+
+          <!-- ==============================================================
+               SLIDE 1: Gen Z Superpowers & Dopamine Learning Journey
+               ============================================================== -->
+          <div class="login-slide" id="login-slide-1">
+            <div class="slide-tag-badge badge-tag-indigo">
+              <span>⚡ THE ULTIMATE EXAM CHEAT CODE</span>
+            </div>
+
+            <h2 class="slide-headline">
+              Stop scrolling brainrot.<br>
+              <span class="accent-gradient">Start dominating exams.</span>
+            </h2>
+
+            <p class="slide-description">
+              PrepPilot turns stressful board prep &amp; JEE/NEET into a high-octane gamified flight. 60-second visual derivations, AI error healing, and real-time national percentiles.
+            </p>
+
+            <!-- Gen Z Interactive Feature Cards -->
+            <div class="genz-cards-grid">
+              <div class="genz-card-item" id="card-streak" title="Click to boost your streak!">
+                <div class="genz-card-icon icon-streak">🔥</div>
+                <div class="genz-card-content">
+                  <div class="genz-card-title">
+                    <span>14-Day Study Streak</span>
+                    <span class="genz-badge-mini badge-fire" id="streak-badge">Top 1% Pace</span>
+                  </div>
+                  <div class="genz-card-sub">Daily consistency multiplier unlocked. +50 XP bonus active.</div>
+                </div>
+              </div>
+
+              <div class="genz-card-item" id="card-xp" title="Click to view rank progression!">
+                <div class="genz-card-icon icon-xp">⚡</div>
+                <div class="genz-card-content">
+                  <div class="genz-card-title">
+                    <span>Flight Cadet • Level 18</span>
+                    <span class="genz-badge-mini badge-xp-glow" id="xp-badge">+450 XP/Mock</span>
+                  </div>
+                  <div class="genz-card-sub">Earn XP for every derivation mastered and formula recalled.</div>
+                </div>
+              </div>
+
+              <div class="genz-card-item" id="card-derivation">
+                <div class="genz-card-icon icon-reels">🎥</div>
+                <div class="genz-card-content">
+                  <div class="genz-card-title">
+                    <span>60s Derivation Visualizers</span>
+                    <span class="genz-badge-mini">High Yield</span>
+                  </div>
+                  <div class="genz-card-sub">Rotational mechanics, organic reactions &amp; calculus explained in seconds.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Slide 1 Actions -->
+            <div class="slide-actions-row">
+              <button type="button" class="btn-slide-next" id="btn-next-to-slide-2">
+                <span>Next: See Your Flight Plan</span>
+                <span>→</span>
+              </button>
+              <button type="button" class="btn-slide-secondary" id="btn-skip-to-login">
+                Skip to Login
+              </button>
+            </div>
+          </div>
+
+          <!-- ==============================================================
+               SLIDE 2: Autonomous Daily Pilot Planner Roadmap
+               ============================================================== -->
+          <div class="login-slide" id="login-slide-2">
+            <div class="slide-tag-badge badge-tag-emerald">
+              <span>🗓️ AUTONOMOUS FLIGHT ROADMAP</span>
+            </div>
+
+            <h2 class="slide-headline">
+              Every single day planned.<br>
+              <span class="accent-gradient">Zero guesswork till exam eve.</span>
+            </h2>
+
+            <p class="slide-description">
+              No more random PDF hoarding. Our autopilot calendar allocates exact chapters, DPPs, and 15-minute diagnostic checks day-by-day.
+            </p>
+
+            <!-- Interactive Planner Preview Card -->
+            <div class="planner-preview-card">
+              <div class="planner-days-tabs">
+                <div class="p-day-tab active" data-pday="1">Day 1: Concept Launch</div>
+                <div class="p-day-tab" data-pday="2">Day 2: Deep Drills</div>
+                <div class="p-day-tab" data-pday="3">Day 3: Exam Eve</div>
+              </div>
+
+              <div class="planner-modules-list">
+                <div class="p-mod-row">
+                  <span class="p-mod-left">🎥 Masterclass Concept Sessions</span>
+                  <span class="p-mod-tag">✓ Ready</span>
+                </div>
+                <div class="p-mod-row">
+                  <span class="p-mod-left">📝 Handwritten Formula Mnemonics</span>
+                  <span class="p-mod-tag">✓ Ready</span>
+                </div>
+                <div class="p-mod-row">
+                  <span class="p-mod-left">🎯 Daily Practice Problems (DPP)</span>
+                  <span class="p-mod-tag">✓ Ready</span>
+                </div>
+                <div class="p-mod-row">
+                  <span class="p-mod-left">⏱️ 15-Min CBT Checkpoint Diagnostic</span>
+                  <span class="p-mod-tag">✓ Ready</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Target Score Slider Widget -->
+            <div class="target-slider-widget">
+              <div class="slider-widget-header">
+                <span class="slider-widget-title">Set Target Percentile</span>
+                <span class="slider-target-badge" id="slider-target-badge">99.4%ile</span>
+              </div>
+              <input 
+                type="range" 
+                id="login-target-slider" 
+                class="login-range-slider" 
+                min="80" 
+                max="99.9" 
+                step="0.1" 
+                value="99.4"
+                aria-label="Set target percentile"
+              >
+              <div class="slider-metrics-row">
+                <span id="slider-pace-label" style="font-weight: 700; color: #4338ca;">⚡ Top AIR &lt; 200 (IIT / AIIMS Pace)</span>
+                <div>
+                  <span class="slider-metric-bold" id="slider-hours-label">200 hrs</span> • 
+                  <span class="slider-metric-bold" id="slider-drills-label">68 Qs/day</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Slide 2 Actions -->
+            <div class="slide-actions-row">
+              <button type="button" class="btn-slide-secondary" id="btn-back-to-slide-1">
+                ← Back
+              </button>
+              <button type="button" class="btn-slide-next" id="btn-next-to-slide-3">
+                <span>Ready to Lock In? Enter Cockpit</span>
+                <span>→</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- ==============================================================
+               SLIDE 3: The Reference Split-Screen Login Form (G8t0uPVWAAAg2Wi.avif)
+               ============================================================== -->
+          <div class="login-slide" id="login-slide-3">
+            <div class="login-form-wrapper">
+
+              <!-- Geometric Brand Logo Mark (Matching Reference Design) -->
+              <div class="login-brand-icon" title="PrepPilot">
+                <svg class="login-logo-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="14" height="34" rx="7" fill="#0f172a" x="6" y="3" />
+                  <path d="M22 17C22 10.9249 26.9249 6 33 6V28C26.9249 28 22 23.0751 22 17Z" fill="#0f172a" />
+                </svg>
+              </div>
+
+              <!-- Header Titles with Sign-up / Log-in Mode Toggle -->
+              <h1 class="login-title" id="login-title">Get started with PrepPilot</h1>
+              <p class="login-subtitle" id="login-subtitle-toggle">
+                Already have an account? <span class="login-toggle-link" id="login-toggle-link">Log in</span>
+              </p>
+
+              <!-- Credentials Form (Exact Fields from Reference Image) -->
+              <form class="login-form" id="login-auth-form">
+                <div class="login-field-group">
+                  <label for="login-email" class="login-field-label">Enter your email</label>
+                  <input 
+                    type="email" 
+                    id="login-email" 
+                    class="login-text-input" 
+                    placeholder="name@email.com" 
+                    value="arjun.sharma@preppilot.com"
+                    required
+                  >
+                </div>
+
+                <div class="login-field-group">
+                  <label for="login-password" class="login-field-label">Password</label>
+                  <input 
+                    type="password" 
+                    id="login-password" 
+                    class="login-text-input" 
+                    placeholder="your password" 
+                    value="topper2026"
+                    required
+                  >
+                </div>
+
+                <button type="submit" class="btn-login-continue" id="btn-login-submit">
+                  Continue
+                </button>
+              </form>
+
+              <!-- "OR" Divider Line -->
+              <div class="login-divider-row">
+                <div class="login-divider-line"></div>
+                <span class="login-divider-text">OR</span>
+                <div class="login-divider-line"></div>
+              </div>
+
+              <!-- Continue with Google (Exact White Card Pill) -->
+              <button type="button" class="btn-login-google" id="btn-login-google">
+                <svg class="google-icon-svg" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                  <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+                  <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                  <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                </svg>
+                <span>Continue with Google</span>
+              </button>
+
+              <!-- Quick Demo Access Link -->
+              <a href="#" class="login-quick-student-link" id="btn-quick-guest">
+                ⚡ Quick Demo Access as Arjun Sharma (Class 10th) →
+              </a>
+
+              <!-- Back to Tour button -->
+              <div style="text-align: center; margin-top: 0.5rem;">
+                <button type="button" id="btn-back-to-tour" style="background: none; border: none; font-size: 0.76rem; color: #94a3b8; cursor: pointer; text-decoration: underline;">
+                  ← Back to Feature Tour
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Bottom Trust Badges -->
+      <div class="login-trust-footer">
+        <div class="trust-badges-list">
+          <span class="trust-badge-item">✓ CBSE &amp; ICSE Aligned</span>
+          <span class="trust-badge-item">✓ JEE &amp; NEET 2026</span>
+        </div>
+        <span>Trusted by 500k+ learners</span>
+      </div>
+
+    </div>
+
+    <!-- ====================================================================
+         RIGHT PANE: Pitch Black with Glowing Iridescent Crystal Lotus Visual
+         (Exact Match to Reference Image G8t0uPVWAAAg2Wi.avif)
+         ==================================================================== -->
+    <div class="login-right-pane">
+      
+      <!-- Top Meta Tag -->
+      <div class="right-meta-top">
+        <span class="right-meta-location">New Delhi • v2.4</span>
+      </div>
+
+      <!-- Glowing Crystal Lotus Central Visual -->
+      <div class="lotus-visual-container">
+        <div class="lotus-ambient-glow"></div>
+        <img 
+          src="assets/crystal_lotus_bg.jpg" 
+          alt="Iridescent Crystal Lotus - PrepPilot AI" 
+          class="lotus-bg-image"
+        >
+      </div>
+
+      <!-- Bottom Tagline (Matching Reference Design) -->
+      <div class="right-meta-bottom">
+        <span class="right-meta-tagline">Designed for toppers • Evolved by PrepPilot AI</span>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Floating Toast Notification -->
+  <div class="login-toast" id="login-toast"></div>
+
+  <!-- Script -->
+  <script src="js/login.js"></script>
+</body>
+</html>

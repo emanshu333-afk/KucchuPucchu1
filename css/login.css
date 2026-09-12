@@ -1,0 +1,873 @@
+/* ==========================================================================
+   PrepPilot - Gen Z Horizontal Onboarding & High-Trust Login Page
+   Inspired by collectui reference (G8t0uPVWAAAg2Wi.avif) with 3-Slide Journey
+   ========================================================================== */
+
+:root {
+  --login-dark-bg: #000000;
+  --login-light-bg: #fcfcfd;
+  --login-border: #e2e8f0;
+  --login-text-dark: #0f172a;
+  --login-text-muted: #64748b;
+  --login-primary-btn: #14161a;
+  --login-primary-btn-hover: #05070a;
+  --genz-indigo: #6366f1;
+  --genz-sky: #0ea5e9;
+  --genz-amber: #f59e0b;
+  --genz-rose: #f43f5e;
+  --genz-emerald: #10b981;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body.login-body {
+  min-height: 100vh;
+  width: 100vw;
+  background: var(--login-dark-bg);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--login-text-dark);
+  overflow-x: hidden;
+  display: flex;
+}
+
+/* --------------------------------------------------------------------------
+   Split-Screen Layout: 48% Left / 52% Right
+   -------------------------------------------------------------------------- */
+.login-split-container {
+  display: flex;
+  width: 100vw;
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   LEFT PANE: Speckled Paper Canvas with Horizontal Slide Track
+   ========================================================================== */
+.login-left-pane {
+  flex: 0 0 48%;
+  max-width: 48%;
+  background: var(--login-light-bg);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.2rem 3rem 1.8rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Micro-speckled texture */
+.login-left-pane::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Top Bar: Back to Home + Slide Stepper Navigation */
+.login-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 10;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.login-back-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--login-text-muted);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: color 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+
+.login-back-home:hover {
+  color: var(--login-text-dark);
+  transform: translateX(-2px);
+}
+
+/* Gen Z Horizontal Slide Stepper Pills */
+.slide-stepper-pills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f1f5f9;
+  border: 1px solid var(--login-border);
+  padding: 3px 5px;
+  border-radius: 999px;
+}
+
+.stepper-pill-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.stepper-pill-btn:hover {
+  color: #0f172a;
+}
+
+.stepper-pill-btn.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.stepper-pill-btn .pill-num {
+  font-size: 0.65rem;
+  opacity: 0.6;
+}
+
+/* --------------------------------------------------------------------------
+   Horizontal Slides Viewport & Track
+   -------------------------------------------------------------------------- */
+.login-carousel-viewport {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  overflow: hidden;
+  margin: auto 0;
+}
+
+.login-slides-track {
+  display: flex;
+  width: 300%;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.login-slide {
+  width: 33.333333%;
+  flex-shrink: 0;
+  padding: 0.5rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   SLIDE 1: Gen Z Superpowers & Dopamine Study Intro
+   -------------------------------------------------------------------------- */
+.slide-tag-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  width: fit-content;
+  margin-bottom: 0.8rem;
+}
+
+.badge-tag-indigo {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--genz-indigo);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+}
+
+.badge-tag-emerald {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--genz-emerald);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.slide-headline {
+  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: #0f172a;
+  margin-bottom: 0.6rem;
+}
+
+.slide-headline .accent-gradient {
+  background: linear-gradient(135deg, #6366f1 0%, #0ea5e9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.slide-description {
+  font-size: 0.88rem;
+  color: #64748b;
+  line-height: 1.55;
+  margin-bottom: 1.4rem;
+}
+
+/* Gen Z Feature Cards Grid */
+.genz-cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-bottom: 1.6rem;
+}
+
+.genz-card-item {
+  background: #ffffff;
+  border: 1px solid var(--login-border);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.genz-card-item:hover {
+  transform: translateY(-2px);
+  border-color: #cbd5e1;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+}
+
+.genz-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.icon-streak { background: #fff1f2; }
+.icon-reels { background: #f0fdf4; }
+.icon-xp { background: #eff6ff; }
+
+.genz-card-content {
+  flex: 1;
+}
+
+.genz-card-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.genz-card-sub {
+  font-size: 0.74rem;
+  color: #64748b;
+}
+
+.genz-badge-mini {
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.badge-fire {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.badge-xp-glow {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+/* Slide Action Buttons */
+.slide-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-slide-next {
+  flex: 1;
+  background: var(--login-primary-btn);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.82rem 1.4rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.btn-slide-next:hover {
+  background: var(--login-primary-btn-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.btn-slide-secondary {
+  background: transparent;
+  color: #64748b;
+  border: 1px solid var(--login-border);
+  border-radius: 8px;
+  padding: 0.82rem 1.1rem;
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-slide-secondary:hover {
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+/* --------------------------------------------------------------------------
+   SLIDE 2: Daily Pilot Planner Preview
+   -------------------------------------------------------------------------- */
+.planner-preview-card {
+  background: #ffffff;
+  border: 1px solid var(--login-border);
+  border-radius: 14px;
+  padding: 1.1rem;
+  margin-bottom: 1.4rem;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.04);
+}
+
+.planner-days-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 1rem;
+}
+
+.p-day-tab {
+  flex: 1;
+  background: #f8fafc;
+  border: 1px solid var(--login-border);
+  border-radius: 8px;
+  padding: 6px;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.p-day-tab.active {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+
+.planner-modules-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.p-mod-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: #f8fafc;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  color: #334155;
+}
+
+.p-mod-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.p-mod-tag {
+  font-size: 0.68rem;
+  color: #059669;
+  font-weight: 700;
+}
+
+/* Interactive Target Score Slider */
+.target-slider-widget {
+  background: #ffffff;
+  border: 1px solid var(--login-border);
+  border-radius: 12px;
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 1.4rem;
+}
+
+.slider-widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+
+.slider-widget-title {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.slider-target-badge {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.login-range-slider {
+  width: 100%;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: #e2e8f0;
+  border-radius: 999px;
+  outline: none;
+  margin-bottom: 0.6rem;
+  cursor: pointer;
+}
+
+.login-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #0f172a;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  cursor: grab;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.login-range-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  background: #6366f1;
+}
+
+.slider-metrics-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.74rem;
+  color: #64748b;
+  border-top: 1px dashed #e2e8f0;
+  padding-top: 0.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   SLIDE 3: The Reference Login Card (G8t0uPVWAAAg2Wi.avif)
+   -------------------------------------------------------------------------- */
+.login-form-wrapper {
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+/* Geometric Brand Logo Mark (Matching Reference Design) */
+.login-brand-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.4rem;
+  width: 44px;
+  height: 44px;
+}
+
+.login-logo-svg {
+  width: 36px;
+  height: 36px;
+}
+
+.login-title {
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: #111827;
+  text-align: center;
+  margin-bottom: 0.35rem;
+}
+
+.login-subtitle {
+  font-size: 0.86rem;
+  color: var(--login-text-muted);
+  text-align: center;
+  margin-bottom: 1.6rem;
+}
+
+.login-toggle-link {
+  color: #0f172a;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.login-toggle-link:hover {
+  color: var(--genz-indigo);
+}
+
+/* Credentials Form Fields */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.05rem;
+}
+
+.login-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  text-align: left;
+}
+
+.login-field-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.login-text-input {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid var(--login-border);
+  border-radius: 8px;
+  padding: 0.75rem 0.95rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--login-text-dark);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-text-input::placeholder {
+  color: #94a3b8;
+}
+
+.login-text-input:focus {
+  border-color: #0f172a;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+}
+
+.btn-login-continue {
+  width: 100%;
+  background: var(--login-primary-btn);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.82rem;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 0.2rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.btn-login-continue:hover {
+  background: var(--login-primary-btn-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* "OR" Divider */
+.login-divider-row {
+  display: flex;
+  align-items: center;
+  margin: 0.5rem 0;
+  gap: 1rem;
+}
+
+.login-divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--login-border);
+}
+
+.login-divider-text {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.06em;
+}
+
+/* Google 1-Click Button */
+.btn-login-google {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid var(--login-border);
+  border-radius: 8px;
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #1e293b;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.btn-login-google:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.google-icon-svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.login-quick-student-link {
+  display: block;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748b;
+  text-decoration: none;
+  margin-top: 0.6rem;
+  transition: color 0.2s ease;
+}
+
+.login-quick-student-link:hover {
+  color: #0f172a;
+}
+
+/* Bottom Footer Trust Row */
+.login-trust-footer {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  font-size: 0.74rem;
+  color: #94a3b8;
+}
+
+.trust-badges-list {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.trust-badge-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ==========================================================================
+   RIGHT PANE: Pitch Black with Glowing Iridescent Crystal Lotus Visual
+   (Exact Match to G8t0uPVWAAAg2Wi.avif)
+   ========================================================================== */
+.login-right-pane {
+  flex: 0 0 52%;
+  max-width: 52%;
+  background: var(--login-dark-bg);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.8rem 3.5rem;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Top Meta Header: "New Delhi • v2.4" */
+.right-meta-top {
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+  z-index: 3;
+}
+
+.right-meta-location {
+  font-size: 0.88rem;
+  color: #94a3b8;
+  letter-spacing: 0.02em;
+  font-weight: 500;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Central Glowing Crystal Lotus Visual */
+.lotus-visual-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.lotus-bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(1.05) contrast(1.03);
+  animation: lotusBreathe 8s infinite ease-in-out;
+}
+
+/* Floating Gen Z Study Sparks */
+.lotus-ambient-glow {
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.12) 0%, rgba(147, 197, 253, 0.08) 45%, transparent 70%);
+  pointer-events: none;
+  animation: glowPulse 6s infinite alternate ease-in-out;
+}
+
+@keyframes lotusBreathe {
+  0%, 100% { transform: scale(1); filter: brightness(1.05); }
+  50% { transform: scale(1.02); filter: brightness(1.12); }
+}
+
+@keyframes glowPulse {
+  0% { opacity: 0.6; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1.08); }
+}
+
+/* Bottom Tagline */
+.right-meta-bottom {
+  position: relative;
+  z-index: 3;
+}
+
+.right-meta-tagline {
+  font-size: 0.92rem;
+  color: #94a3b8;
+  letter-spacing: 0.02em;
+  font-weight: 500;
+  background: rgba(0, 0, 0, 0.5);
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* --------------------------------------------------------------------------
+   Toast Notification Overlay
+   -------------------------------------------------------------------------- */
+.login-toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: #0f172a;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 99999;
+}
+
+.login-toast.active {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Adaptations
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .login-left-pane {
+    flex: 0 0 52%;
+    max-width: 52%;
+    padding: 2rem 2rem;
+  }
+  .login-right-pane {
+    flex: 0 0 48%;
+    max-width: 48%;
+    padding: 2rem 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .login-split-container {
+    flex-direction: column-reverse;
+  }
+
+  .login-left-pane {
+    flex: 1 1 auto;
+    max-width: 100%;
+    width: 100%;
+    padding: 2rem 1.5rem;
+    border-right: none;
+  }
+
+  .login-right-pane {
+    flex: 0 0 240px;
+    max-width: 100%;
+    width: 100%;
+    padding: 1.2rem;
+    min-height: 240px;
+  }
+
+  .right-meta-top, .right-meta-bottom {
+    display: none;
+  }
+}

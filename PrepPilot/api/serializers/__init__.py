@@ -6,7 +6,8 @@ from PrepPilot.models import (
     User, Exam, Subject, Topic, Resource,
     StudyPlan, StudyBlock, MockTest,
     TopicPerformance, ReadinessScore,
-    WhatIfScenario, RecoveryPlan, Notification
+    WhatIfScenario, RecoveryPlan, Notification,
+    StudyResourceVault, AssistantConversation,
 )
 
 
@@ -249,6 +250,53 @@ class NotificationSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'created_at']
 
 
+class StudyResourceVaultSerializer(serializers.ModelSerializer):
+    owner_name = serializers.CharField(
+        source='owner.username', read_only=True
+    )
+
+    class Meta:
+        model = StudyResourceVault
+        fields = [
+            'id', 'owner', 'owner_name', 'title', 'description',
+            'source_type', 'link_url', 'pdf_file', 'subject_name',
+            'topic_name', 'related_topic', 'is_published',
+            'published_at', 'created_at', 'updated_at',
+        ]
+        read_only_fields = [
+            'id', 'owner', 'published_at', 'created_at', 'updated_at',
+        ]
+
+    def validate(self, attrs):
+        source_type = attrs.get(
+            'source_type', getattr(self.instance, 'source_type', 'link')
+        )
+        link_url = attrs.get(
+            'link_url', getattr(self.instance, 'link_url', '')
+        )
+        pdf_file = attrs.get(
+            'pdf_file', getattr(self.instance, 'pdf_file', None)
+        )
+        if source_type == 'link' and not link_url:
+            raise serializers.ValidationError(
+                {'link_url': 'A web link is required for link items.'}
+            )
+        if source_type == 'pdf' and not pdf_file:
+            raise serializers.ValidationError(
+                {'pdf_file': 'A PDF file is required for pdf items.'}
+            )
+        return attrs
+
+
+class AssistantChatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AssistantConversation
+        fields = [
+            'id', 'question', 'answer', 'sources', 'created_at',
+        ]
+        read_only_fields = ['id', 'answer', 'sources', 'created_at']
+
+
 __all__ = [
     'UserSerializer',
     'UserRegistrationSerializer',
@@ -264,4 +312,6 @@ __all__ = [
     'WhatIfScenarioSerializer',
     'RecoveryPlanSerializer',
     'NotificationSerializer',
+    'StudyResourceVaultSerializer',
+    'AssistantChatSerializer',
 ]

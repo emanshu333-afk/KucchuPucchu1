@@ -8,12 +8,17 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from datetime import date, timedelta
+from django.db.models import Q
+from django.conf import settings
+from django.http import HttpResponseRedirect
+from urllib.parse import urlencode
 
 from PrepPilot.models import (
     User, Exam, Subject, Topic, Resource,
     StudyPlan, StudyBlock, MockTest,
     TopicPerformance, ReadinessScore,
-    WhatIfScenario, RecoveryPlan, Notification
+    WhatIfScenario, RecoveryPlan, Notification,
+    StudyResourceVault, AssistantConversation,
 )
 from PrepPilot.api.serializers import (
     UserSerializer, UserRegistrationSerializer,
@@ -21,11 +26,14 @@ from PrepPilot.api.serializers import (
     StudyBlockSerializer, StudyPlanSerializer, MockTestSerializer,
     TopicPerformanceSerializer, ReadinessScoreSerializer,
     WhatIfScenarioSerializer, RecoveryPlanSerializer, NotificationSerializer,
+    StudyResourceVaultSerializer, AssistantChatSerializer,
 )
 from PrepPilot.engines import (
     TopicPriorityEngine, TimeBudgetEngine, ResourceMatcherEngine,
-    DailyPlanEngine, RecoveryEngine, ReadinessEngine, WhatIfEngine
+    DailyPlanEngine, RecoveryEngine, ReadinessEngine, WhatIfEngine,
+    StudyAssistantEngine, FastStudyAssistant,
 )
+from PrepPilot.adapters import get_tokens_for_user
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -659,3 +667,246 @@ class DashboardView(APIView):
             'unread_notifications': unread_count,
             'recent_recovery': RecoveryPlanSerializer(recent_recovery, many=True).data,
         })
+
+
+class StudyResourceVaultViewSet(viewsets.ModelViewSet):
+    """Private vault + public shared resources.
+
+    GET /api/v1/vault/         -> list my items + published items from others
+    POST /api/v1/vault/        -> create new vault item (private)
+    POST /api/v1/vault/{id}/publish/   -> publish my item
+    POST /api/v1/vault/{id}/unpublish/ -> unpublish my item
+    """
+    serializer_class = StudyResourceVaultSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        # Own items (private + published) + published items from other users
+        return StudyResourceVault.objects.filter(
+            Q(owner=self.request.user) | Q(is_published=True)
+        ).select_related('owner', 'related_topic')
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+    @action(detail=True, methods=['post'])
+    def publish(self, request, pk=None):
+        item = self.get_object()
+        if item.owner != request.user:
+            return Response(
+                {'detail': 'Only the owner can publish.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        item.publish()
+        return Response(StudyResourceVaultSerializer(item).data)
+
+    @action(detail=True, methods=['post'])
+    def unpublish(self, request, pk=None):
+        item = self.get_object()
+        if item.owner != request.user:
+            return Response(
+                {'detail': 'Only the owner can unpublish.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        item.unpublish()
+        return Response(StudyResourceVaultSerializer(item).data)
+
+
+class AssistantChatViewSet(viewsets.ViewSet):
+    """Fast on-screen study assistant - grounded answers with instant classification.
+
+    POST /api/v1/assistant/ask/
+    {
+        "question": "How do I revise Electrostatics effectively?"
+    }
+    
+    Response includes:
+    - answer: grounded response (refined by flash model if API key present)
+    - model_used: which model was used
+    - task_type: classified task type
+    - sources: grounded citations from user's data
+    - topics: matched topic IDs
+    - vault_items: matched vault item IDs
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request):
+        question = request.data.get('question', '')
+        engine = FastStudyAssistant(request.user)
+        result = engine.answer(question)
+        return Response(result)
+
+
+class GoogleLoginView(APIView):
+    """
+    Initiate Google OAuth2 login.
+    Redirects to Google's OAuth2 authorization page.
+    """
+    permission_classes = [permissions.AllowAny]
+    
+    def get(self, request):
+        from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+        from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+        from allauth.socialaccount.models import SocialApp
+        from django.conf import settings
+        
+        try:
+            app = SocialApp.objects.get(provider='google', sites=settings.SITE_ID)
+        except SocialApp.DoesNotExist:
+            return Response(
+                {'error': 'Google OAuth not configured. Add SocialApp in Django admin.'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+        # Build Google OAuth URL
+        client_id = app.client_id
+        redirect_uri = settings.GOOGLE_OAUTH_REDIRECT_URI
+        scope = ' '.join(['profile', 'email'])
+        state = 'preppilot_auth'
+        
+        auth_url = (
+            'https://accounts.google.com/o/oauth2/v2/auth?'
+            f'client_id={client_id}&'
+            f'redirect_uri={redirect_uri}&'
+            f'scope={scope}&'
+            f'response_type=code&'
+            f'access_type=online&'
+            f'state={state}&'
+            f'prompt=select_account'
+        )
+        
+        return HttpResponseRedirect(auth_url)
+
+
+class GoogleCallbackView(APIView):
+    """
+    Handle Google OAuth2 callback.
+    Exchanges authorization code for tokens and creates/updates user.
+    Returns JWT tokens.
+    """
+    permission_classes = [permissions.AllowAny]
+    
+    def get(self, request):
+        from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+        from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+        from allauth.socialaccount.models import SocialApp, SocialAccount, SocialToken
+        from allauth.socialaccount.helpers import complete_social_login
+        from django.contrib.auth import login
+        import requests
+        
+        code = request.GET.get('code')
+        error = request.GET.get('error')
+        
+        if error:
+            frontend_url = getattr(settings, 'FRONTEND_URL', 'http://localhost:3000')
+            return HttpResponseRedirect(f'{frontend_url}/auth/error?error={error}')
+        
+        if not code:
+            return Response(
+                {'error': 'No authorization code received'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            app = SocialApp.objects.get(provider='google', sites=settings.SITE_ID)
+        except SocialApp.DoesNotExist:
+            return Response(
+                {'error': 'Google OAuth not configured'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+        # Exchange code for access token
+        token_url = 'https://oauth2.googleapis.com/token'
+        token_data = {
+            'code': code,
+            'client_id': app.client_id,
+            'client_secret': app.secret,
+            'redirect_uri': settings.GOOGLE_OAUTH_REDIRECT_URI,
+            'grant_type': 'authorization_code',
+        }
+        
+        token_response = requests.post(token_url, data=token_data)
+        if token_response.status_code != 200:
+            return Response(
+                {'error': 'Failed to exchange code for token'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        tokens = token_response.json()
+        access_token = tokens.get('access_token')
+        
+        # Get user info from Google
+        userinfo_response = requests.get(
+            'https://www.googleapis.com/oauth2/v2/userinfo',
+            headers={'Authorization': f'Bearer {access_token}'}
+        )
+        
+        if userinfo_response.status_code != 200:
+            return Response(
+                {'error': 'Failed to get user info from Google'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        userinfo = userinfo_response.json()
+        email = userinfo.get('email')
+        google_id = userinfo.get('id')
+        first_name = userinfo.get('given_name', '')
+        last_name = userinfo.get('family_name', '')
+        picture = userinfo.get('picture', '')
+        
+        if not email:
+            return Response(
+                {'error': 'Email not provided by Google'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Find or create user
+        user, created = User.objects.get_or_create(
+            email=email,
+            defaults={
+                'username': email.split('@')[0],
+                'first_name': first_name,
+                'last_name': last_name,
+            }
+        )
+        
+        if created or not user.first_name:
+            user.first_name = first_name or user.first_name
+            user.last_name = last_name or user.last_name
+            user.save()
+        
+        # Create or update SocialAccount
+        social_account, _ = SocialAccount.objects.get_or_create(
+            user=user,
+            provider='google',
+            uid=google_id,
+            defaults={
+                'extra_data': userinfo,
+            }
+        )
+        
+        # Create or update SocialToken
+        SocialToken.objects.update_or_create(
+            account=social_account,
+            app=app,
+            defaults={
+                'token': access_token,
+                'token_secret': tokens.get('refresh_token', ''),
+                'expires_at': timezone.now() + timezone.timedelta(seconds=tokens.get('expires_in', 3600)),
+            }
+        )
+        
+        # Generate JWT tokens
+        jwt_tokens = get_tokens_for_user(user)
+        
+        # Redirect to frontend with tokens
+        frontend_url = getattr(settings, 'FRONTEND_URL', 'http://localhost:3000')
+        redirect_url = f'{frontend_url}/auth/callback?' + urlencode({
+            'access': jwt_tokens['access'],
+            'refresh': jwt_tokens['refresh'],
+            'user_id': str(user.id),
+            'email': user.email,
+            'name': user.get_full_name(),
+        })
+        
+        return HttpResponseRedirect(redirect_url)

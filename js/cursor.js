@@ -1,6 +1,6 @@
 /**
  * PrepPilot - Personal Pilot Mouse Cursor Engine
- *
+ * 
  * Features:
  * 1. Bespoke Pilot Aero-Dart Cursor with Luminous Glass Trail
  * 2. Only visible and active when floating over the website

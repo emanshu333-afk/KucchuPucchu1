@@ -49,29 +49,39 @@ def update_study_plan_progress(sender, instance, **kwargs):
 @receiver(post_save, sender=TopicPerformance)
 def update_topic_mastery(sender, instance, **kwargs):
     """Update topic mastery level based on performance."""
+    # Avoid recursion by checking if we're already updating these fields
     if instance.questions_attempted > 0:
-        instance.accuracy = round((instance.questions_correct / instance.questions_attempted) * 100, 2)
+        new_accuracy = round((instance.questions_correct / instance.questions_attempted) * 100, 2)
         
         # Calculate mastery based on accuracy and revision count
-        base_mastery = float(instance.accuracy)
+        base_mastery = float(new_accuracy)
         revision_bonus = min(instance.revision_count * 5, 20)
-        instance.mastery_level = min(int(base_mastery + revision_bonus), 100)
+        new_mastery = min(int(base_mastery + revision_bonus), 100)
         
-        # Update topic's current level
-        topic = instance.topic
-        topic.current_level = instance.mastery_level
-        topic.calculate_priority()
-        topic.save(update_fields=['current_level', 'priority', 'priority_score'])
-        
-        instance.save(update_fields=['accuracy', 'mastery_level'])
+        # Only update if values changed
+        if instance.accuracy != new_accuracy or instance.mastery_level != new_mastery:
+            instance.accuracy = new_accuracy
+            instance.mastery_level = new_mastery
+            
+            # Update topic's current level
+            topic = instance.topic
+            topic.current_level = new_mastery
+            topic.calculate_priority()
+            topic.save(update_fields=['current_level', 'priority', 'priority_score'])
+            
+            # Save without triggering signal again by using update()
+            TopicPerformance.objects.filter(pk=instance.pk).update(
+                accuracy=new_accuracy,
+                mastery_level=new_mastery
+            )
 
 
 @receiver(post_save, sender=MockTest)
 def create_mock_test_analysis(sender, instance, created, **kwargs):
     """Analyze mock test results when completed."""
     if instance.status == 'completed' and instance.attempted_questions > 0:
-        instance.percentage = round((instance.score / instance.total_marks) * 100, 2) if instance.total_marks > 0 else 0
+        new_percentage = round((instance.score / instance.total_marks) * 100, 2) if instance.total_marks > 0 else 0
         
-        # Update topic performances based on mock test
-        # This would be expanded with actual question-topic mapping
-        instance.save(update_fields=['percentage'])
+        if instance.percentage != new_percentage:
+            # Use update() to avoid recursion
+            MockTest.objects.filter(pk=instance.pk).update(percentage=new_percentage)

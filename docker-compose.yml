@@ -48,7 +48,7 @@ services:
       dockerfile: Dockerfile
     container_name: preppilot-web
     environment:
-      - DJANGO_SETTINGS_MODULE=config.settings.production
+      - DJANGO_SETTINGS_MODULE=code_flux.settings.production
       - DEBUG=False
       - SECRET_KEY=${SECRET_KEY}
       - DB_NAME=${DB_NAME:-preppilot}
@@ -83,7 +83,7 @@ services:
     command: >
       sh -c "python manage.py migrate --noinput &&
              python manage.py collectstatic --noinput &&
-             gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 120"
+             gunicorn code_flux.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 120"
 
   # Celery Worker
   celery-worker:
@@ -92,7 +92,7 @@ services:
       dockerfile: Dockerfile
     container_name: preppilot-celery-worker
     environment:
-      - DJANGO_SETTINGS_MODULE=config.settings.production
+      - DJANGO_SETTINGS_MODULE=code_flux.settings.production
       - DEBUG=False
       - SECRET_KEY=${SECRET_KEY}
       - DB_NAME=${DB_NAME:-preppilot}
@@ -114,7 +114,7 @@ services:
     networks:
       - preppilot-network
     restart: unless-stopped
-    command: celery -A config worker -l info --concurrency=4
+    command: celery -A code_flux worker -l info --concurrency=4
 
   # Celery Beat Scheduler
   celery-beat:
@@ -123,7 +123,7 @@ services:
       dockerfile: Dockerfile
     container_name: preppilot-celery-beat
     environment:
-      - DJANGO_SETTINGS_MODULE=config.settings.production
+      - DJANGO_SETTINGS_MODULE=code_flux.settings.production
       - DEBUG=False
       - SECRET_KEY=${SECRET_KEY}
       - DB_NAME=${DB_NAME:-preppilot}
@@ -142,7 +142,7 @@ services:
     networks:
       - preppilot-network
     restart: unless-stopped
-    command: celery -A config beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    command: celery -A code_flux beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
 
   # Nginx Reverse Proxy (optional for production)
   nginx:

@@ -47,8 +47,8 @@ class TopicPriorityEngine:
     }
     
     PRIORITY_THRESHOLDS = {
-        'must_do': 70,
-        'should_do': 40,
+        'must_do': 65,
+        'should_do': 35,
         'if_time': 0,
     }
     

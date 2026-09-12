@@ -1,6 +1,6 @@
 /**
  * PrepPilot - Liquid Background Canvas Engine
- * Renders smooth floating fluid orbs with harmonic motion,
+ * Renders smooth floating fluid orbs with harmonic motion, 
  * interactive cursor displacement ripples, and shimmering caustic waves.
  */
 
@@ -227,3 +227,4 @@
 
   requestAnimationFrame(animate);
 })();
+

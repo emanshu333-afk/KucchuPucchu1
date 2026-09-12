@@ -947,7 +947,6 @@
   const TODOS_PREFIX_KEY = 'preppilot_todos_' + userSanitized + '_';
 
   let activeTodoFilter = 'all';
-  let currentTodoView = localStorage.getItem('preppilot_todo_view_pref') || 'board';
 
   function escapeHtml(str) {
     if (!str) return '';
@@ -1016,6 +1015,7 @@
     }
   }
 
+  // Generate intelligent day-by-day flight preparation milestones
   // Generate intelligent day-by-day flight preparation milestones (CollectUI-inspired Kanban schema)
   function generateScheduleTodos(mission) {
     if (!mission || !mission.chapters || !mission.chapters.length) return [];
@@ -1127,30 +1127,7 @@
       const raw = localStorage.getItem(TODOS_PREFIX_KEY + scheduleId);
       if (raw) {
         const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) {
-          // Normalize items if missing lane or title
-          let needsUpdate = false;
-          parsed.forEach((t) => {
-            if (!t.lane) {
-              t.lane = t.completed ? 'done' : 'todo';
-              needsUpdate = true;
-            }
-            if (!t.title) {
-              t.title = t.text;
-              needsUpdate = true;
-            }
-            if (!t.desc) {
-              t.desc = t.text;
-              needsUpdate = true;
-            }
-            if (typeof t.progressPercent === 'undefined') {
-              t.progressPercent = t.completed ? 100 : (t.lane === 'doing' ? 65 : 40);
-              needsUpdate = true;
-            }
-          });
-          if (needsUpdate) saveScheduleTodos(scheduleId, parsed);
-          return parsed;
-        }
+        if (Array.isArray(parsed)) return parsed;
       }
     } catch (e) {
       console.error('Error loading todos:', e);
@@ -1184,53 +1161,12 @@
     task.completed = !task.completed;
 
     if (task.completed) {
-      task.lane = 'done';
-      task.progressPercent = 100;
       currentXP += 15;
       if (xpValEl) xpValEl.textContent = `${currentXP.toLocaleString()} XP`;
       if (window.PrepPilotAccount) {
         window.PrepPilotAccount.updateProgress(userSanitized, { xp: currentXP });
       }
-      showToast(`⭐ <strong>+15 XP Earned!</strong> Mastered: <em>${(task.title || task.text).substring(0, 42)}...</em>`);
-    } else {
-      task.lane = 'todo';
-      task.progressPercent = 40;
-    }
-
-    saveScheduleTodos(scheduleId, todos);
-    renderFlightTodoList();
-    renderScheduleSwitcher();
-    renderSchedulesHub();
-  }
-
-  function moveTodoLane(scheduleId, taskId, targetLane) {
-    const todos = getScheduleTodos(scheduleId);
-    const task = todos.find((t) => t.id === taskId);
-    if (!task) return;
-
-    const oldLane = task.lane || (task.completed ? 'done' : 'todo');
-    if (oldLane === targetLane) return;
-
-    task.lane = targetLane;
-
-    if (targetLane === 'done') {
-      if (!task.completed) {
-        task.completed = true;
-        task.progressPercent = 100;
-        currentXP += 15;
-        if (xpValEl) xpValEl.textContent = `${currentXP.toLocaleString()} XP`;
-        if (window.PrepPilotAccount) {
-          window.PrepPilotAccount.updateProgress(userSanitized, { xp: currentXP });
-        }
-        showToast(`🏆 <strong>+15 XP!</strong> Mastered: <em>${(task.title || task.text).substring(0, 40)}</em>`);
-      }
-    } else if (targetLane === 'doing') {
-      task.completed = false;
-      task.progressPercent = 65;
-      showToast(`⚡ In Flight Practice: <strong>${(task.title || task.text).substring(0, 40)}</strong>`);
-    } else {
-      task.completed = false;
-      task.progressPercent = 35;
+      showToast(`⭐ <strong>+15 XP Earned!</strong> Completed: <em>${task.text.substring(0, 42)}...</em>`);
     }
 
     saveScheduleTodos(scheduleId, todos);
@@ -1244,22 +1180,17 @@
     const todos = getScheduleTodos(scheduleId);
     const customTask = {
       id: `todo_cust_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
-      title: text.trim().length > 35 ? text.trim().substring(0, 35) + '...' : text.trim(),
-      desc: text.trim(),
       text: text.trim(),
       category: 'custom',
       dayNum: 1,
       dayLabel: 'Custom Goal',
       completed: false,
-      lane: 'todo',
-      progressPercent: 50,
-      pillColor: 'pink',
       isCustom: true,
       createdAt: Date.now(),
     };
     todos.push(customTask);
     saveScheduleTodos(scheduleId, todos);
-    showToast(`✅ Added custom task: <strong>${customTask.title}</strong>`);
+    showToast(`✅ Added custom task: <strong>${customTask.text}</strong>`);
     renderFlightTodoList();
     renderScheduleSwitcher();
     renderSchedulesHub();
@@ -1439,296 +1370,7 @@
     }
   }
 
-  // Set and persist Active To-Do View Mode ('board' | 'list' | 'roadmap')
-  function setTodoView(mode) {
-    if (!['board', 'list', 'roadmap'].includes(mode)) mode = 'board';
-    currentTodoView = mode;
-    try {
-      localStorage.setItem('preppilot_todo_view_pref', mode);
-    } catch (e) {}
-
-    const boardView = document.getElementById('todo-board-view');
-    const listView = document.getElementById('todo-items-list');
-    const roadmapView = document.getElementById('todo-roadmap-view');
-
-    if (boardView) boardView.style.display = mode === 'board' ? 'grid' : 'none';
-    if (listView) listView.style.display = mode === 'list' ? 'flex' : 'none';
-    if (roadmapView) roadmapView.style.display = mode === 'roadmap' ? 'flex' : 'none';
-
-    document.querySelectorAll('.todo-view-tab').forEach((tab) => {
-      if (tab.getAttribute('data-view') === mode) {
-        tab.classList.add('active');
-      } else {
-        tab.classList.remove('active');
-      }
-    });
-  }
-
-  // Render CollectUI-Inspired Multi-Column Kanban Board
-  function renderKanbanBoard(todos, activeSched) {
-    const laneTodo = document.getElementById('lane-todo');
-    const laneDoing = document.getElementById('lane-doing');
-    const laneDone = document.getElementById('lane-done');
-
-    const badgeTodo = document.getElementById('badge-todo-count');
-    const badgeDoing = document.getElementById('badge-doing-count');
-    const badgeDone = document.getElementById('badge-done-count');
-
-    if (!laneTodo || !laneDoing || !laneDone) return;
-
-    const catBadges = {
-      masterclass: { icon: '📺', name: 'Masterclass' },
-      notes: { icon: '📝', name: 'Notes' },
-      dpp: { icon: '⚡', name: 'DPP' },
-      cbt: { icon: '🧪', name: 'CBT Mock' },
-      custom: { icon: '📌', name: 'Goal' },
-    };
-
-    const initials = studentName
-      ? studentName
-          .split(' ')
-          .filter(Boolean)
-          .map((n) => n[0])
-          .join('')
-          .substring(0, 2)
-          .toUpperCase()
-      : 'AS';
-
-    // Normalize tasks into lanes
-    const todoTasks = todos.filter((t) => (t.lane || (t.completed ? 'done' : 'todo')) === 'todo');
-    const doingTasks = todos.filter((t) => (t.lane || (t.completed ? 'done' : 'todo')) === 'doing');
-    const doneTasks = todos.filter((t) => (t.lane || (t.completed ? 'done' : 'todo')) === 'done');
-
-    if (badgeTodo) badgeTodo.textContent = `${todoTasks.length}`;
-    if (badgeDoing) badgeDoing.textContent = `${doingTasks.length}`;
-    if (badgeDone) badgeDone.textContent = `${doneTasks.length}`;
-
-    function buildCard(item) {
-      const isDone = (item.lane || (item.completed ? 'done' : 'todo')) === 'done';
-      const cat = catBadges[item.category] || { icon: '🎯', name: 'Milestone' };
-      const pillColor = item.pillColor || (item.category === 'masterclass' ? 'indigo' : item.category === 'notes' ? 'amber' : item.category === 'cbt' ? 'pink' : 'emerald');
-      const percent = typeof item.progressPercent !== 'undefined' ? item.progressPercent : (isDone ? 100 : item.lane === 'doing' ? 65 : 35);
-
-      return `
-        <div class="kanban-card ${isDone ? 'completed' : ''}" 
-             draggable="true" 
-             data-task-id="${item.id}" 
-             data-lane="${item.lane || (isDone ? 'done' : 'todo')}">
-          <div class="kanban-card-body">
-            <h4 class="kanban-card-title">${escapeHtml(item.title || item.text)}</h4>
-            <p class="kanban-card-desc">${escapeHtml(item.desc || item.text)}</p>
-            <div class="kanban-progress-pill-track" title="Progress: ${percent}%">
-              <div class="kanban-progress-pill-fill ${pillColor}" style="width: ${percent}%;"></div>
-            </div>
-          </div>
-          <div class="kanban-card-footer">
-            <div class="kanban-footer-left">
-              <button type="button" 
-                      class="kanban-check-btn ${isDone ? 'checked' : ''}" 
-                      data-check-id="${item.id}" 
-                      title="${isDone ? 'Mark Pending' : 'Mark Mastered (+15 XP)'}">
-                ${isDone ? '✓' : ''}
-              </button>
-              <span class="kanban-day-tag">${escapeHtml(item.dayLabel || 'Day 1')}</span>
-              <span class="kanban-meta-tag">${cat.icon} ${cat.name}</span>
-            </div>
-            <div class="kanban-footer-right">
-              ${item.isCustom ? `
-                <button type="button" class="btn-del-kanban-task" data-delete-id="${item.id}" title="Delete this custom milestone">✕</button>
-              ` : ''}
-              <div class="kanban-avatar-chip" title="Pilot: ${escapeHtml(studentName)}">${initials || 'AS'}</div>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    function buildEmpty(lane) {
-      let msg = 'All clear in this lane!';
-      if (lane === 'todo') msg = 'No tasks queued. Add one or switch schedule!';
-      else if (lane === 'doing') msg = 'Drag cards here when actively practicing!';
-      else if (lane === 'done') msg = 'Master tasks or drag here to claim +15 XP!';
-
-      return `
-        <div class="kanban-empty-lane">
-          <span class="kanban-empty-icon">💤</span>
-          <span class="kanban-empty-text">${msg}</span>
-        </div>
-      `;
-    }
-
-    laneTodo.innerHTML = todoTasks.length > 0 ? todoTasks.map(buildCard).join('') : buildEmpty('todo');
-    laneDoing.innerHTML = doingTasks.length > 0 ? doingTasks.map(buildCard).join('') : buildEmpty('doing');
-    laneDone.innerHTML = doneTasks.length > 0 ? doneTasks.map(buildCard).join('') : buildEmpty('done');
-
-    // Drag-and-Drop Event Wiring
-    const boardContainer = document.getElementById('todo-board-view');
-    if (!boardContainer) return;
-
-    // Card drag events
-    boardContainer.querySelectorAll('.kanban-card').forEach((card) => {
-      card.addEventListener('dragstart', (e) => {
-        const tid = card.getAttribute('data-task-id');
-        e.dataTransfer.setData('text/plain', tid);
-        e.dataTransfer.effectAllowed = 'move';
-        card.classList.add('is-dragging');
-      });
-
-      card.addEventListener('dragend', () => {
-        card.classList.remove('is-dragging');
-        document.querySelectorAll('.kanban-column').forEach((col) => col.classList.remove('drag-over'));
-      });
-    });
-
-    // Dropzones & Columns dragover/drop events
-    const dropzones = [
-      { el: laneTodo, col: document.getElementById('col-todo'), lane: 'todo' },
-      { el: laneDoing, col: document.getElementById('col-doing'), lane: 'doing' },
-      { el: laneDone, col: document.getElementById('col-done'), lane: 'done' },
-    ];
-
-    dropzones.forEach(({ el, col, lane }) => {
-      if (!el) return;
-
-      const handleDragOver = (e) => {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-        if (col) col.classList.add('drag-over');
-      };
-
-      const handleDragLeave = (e) => {
-        if (col && (!col.contains(e.relatedTarget) || e.relatedTarget === null)) {
-          col.classList.remove('drag-over');
-        }
-      };
-
-      const handleDrop = (e) => {
-        e.preventDefault();
-        if (col) col.classList.remove('drag-over');
-        const taskId = e.dataTransfer.getData('text/plain');
-        if (taskId) {
-          moveTodoLane(activeSched.id, taskId, lane);
-        }
-      };
-
-      el.addEventListener('dragover', handleDragOver);
-      el.addEventListener('dragleave', handleDragLeave);
-      el.addEventListener('drop', handleDrop);
-
-      if (col) {
-        col.addEventListener('dragover', handleDragOver);
-        col.addEventListener('dragleave', handleDragLeave);
-        col.addEventListener('drop', handleDrop);
-      }
-    });
-
-    // Click events for check buttons and delete buttons
-    boardContainer.querySelectorAll('.kanban-check-btn').forEach((chk) => {
-      chk.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const tid = chk.getAttribute('data-check-id');
-        if (tid) toggleTodoItem(activeSched.id, tid);
-      });
-    });
-
-    boardContainer.querySelectorAll('.btn-del-kanban-task').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const tid = btn.getAttribute('data-delete-id');
-        if (tid) deleteTodoItem(activeSched.id, tid);
-      });
-    });
-  }
-
-  // Render Day-by-Day Roadmap View
-  function renderRoadmapView(todos, activeSched) {
-    const roadmapEl = document.getElementById('todo-roadmap-view');
-    if (!roadmapEl) return;
-
-    if (!todos || todos.length === 0) {
-      roadmapEl.innerHTML = `
-        <div class="todo-empty-state">
-          <span>🎉 No milestones created yet for this flight schedule.</span>
-        </div>
-      `;
-      return;
-    }
-
-    const dayGroups = {};
-    todos.forEach((t) => {
-      const key = t.dayLabel || `Day ${t.dayNum || 1}`;
-      if (!dayGroups[key]) dayGroups[key] = [];
-      dayGroups[key].push(t);
-    });
-
-    const catBadges = {
-      masterclass: { icon: '📺', name: 'Masterclass' },
-      notes: { icon: '📝', name: 'Notes' },
-      dpp: { icon: '⚡', name: 'DPP' },
-      cbt: { icon: '🧪', name: 'CBT Mock' },
-      custom: { icon: '📌', name: 'Goal' },
-    };
-
-    roadmapEl.innerHTML = Object.entries(dayGroups)
-      .map(([dayTitle, groupTodos]) => {
-        const completedGroup = groupTodos.filter((t) => t.completed || t.lane === 'done').length;
-        return `
-          <div class="roadmap-day-group">
-            <div class="roadmap-day-header">
-              <span>🗓️ ${escapeHtml(dayTitle)}</span>
-              <span class="kanban-count-pill">${completedGroup}/${groupTodos.length} Cleared</span>
-            </div>
-            <div class="roadmap-cards-grid">
-              ${groupTodos
-                .map((item) => {
-                  const isDone = item.completed || item.lane === 'done';
-                  const cat = catBadges[item.category] || { icon: '🎯', name: 'Milestone' };
-                  const laneStatus = item.lane === 'doing' ? '⚡ In Progress' : isDone ? '🏆 Cleared' : '🎯 Queued';
-                  return `
-                    <div class="todo-item ${isDone ? 'completed' : ''}" data-task-id="${item.id}">
-                      <div class="todo-item-left">
-                        <div class="todo-checkbox ${isDone ? 'checked' : ''}" data-check-id="${item.id}" title="Toggle Milestone">
-                          ${isDone ? '✓' : ''}
-                        </div>
-                        <div class="todo-item-content">
-                          <span class="todo-item-text">${escapeHtml(item.title || item.text)}</span>
-                          <div class="todo-item-meta">
-                            <span class="todo-cat-tag">${cat.icon} ${cat.name}</span>
-                            <span class="kanban-day-tag">${laneStatus}</span>
-                          </div>
-                        </div>
-                      </div>
-                      ${item.isCustom ? `
-                        <button type="button" class="btn-delete-custom-todo" data-delete-id="${item.id}" title="Delete task">✕</button>
-                      ` : ''}
-                    </div>
-                  `;
-                })
-                .join('')}
-            </div>
-          </div>
-        `;
-      })
-      .join('');
-
-    roadmapEl.querySelectorAll('.todo-checkbox').forEach((chk) => {
-      chk.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const tid = chk.getAttribute('data-check-id');
-        if (tid) toggleTodoItem(activeSched.id, tid);
-      });
-    });
-
-    roadmapEl.querySelectorAll('.btn-delete-custom-todo').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const tid = btn.getAttribute('data-delete-id');
-        if (tid) deleteTodoItem(activeSched.id, tid);
-      });
-    });
-  }
-
-  // Render Flight To-Do Checklist Panel (Board, List, Roadmap)
+  // Render Flight To-Do Checklist Panel
   function renderFlightTodoList() {
     const todoSec = document.getElementById('section-flight-todo');
     const headingEl = document.getElementById('todo-schedule-heading');
@@ -1762,9 +1404,9 @@
 
     const todos = getScheduleTodos(activeSched.id);
     const allCount = todos.length;
-    const completedCount = todos.filter((t) => t.completed || t.lane === 'done').length;
-    const pendingCount = todos.filter((t) => !t.completed && t.lane !== 'done').length;
-    const todayCount = todos.filter((t) => t.dayNum === 1 || (!t.completed && t.lane !== 'done')).length;
+    const completedCount = todos.filter((t) => t.completed).length;
+    const pendingCount = todos.filter((t) => !t.completed).length;
+    const todayCount = todos.filter((t) => t.dayNum === 1 || !t.completed).length;
     const percent = allCount > 0 ? Math.round((completedCount / allCount) * 100) : 0;
 
     if (percentEl) percentEl.textContent = `${percent}%`;
@@ -1778,27 +1420,21 @@
     if (countPendingEl) countPendingEl.textContent = `${pendingCount}`;
     if (countCompletedEl) countCompletedEl.textContent = `${completedCount}`;
 
-    // 1. Render CollectUI-style Interactive Kanban Board
-    renderKanbanBoard(todos, activeSched);
-
-    // 2. Render Day-by-Day Roadmap View
-    renderRoadmapView(todos, activeSched);
-
-    // 3. Render Filtered Linear List View
+    // Filter items according to activeTodoFilter
     let filtered = todos;
     if (activeTodoFilter === 'today') {
       filtered = todos.filter((t) => t.dayNum === 1 || (!t.completed && t.dayNum <= 2));
     } else if (activeTodoFilter === 'pending') {
-      filtered = todos.filter((t) => !t.completed && t.lane !== 'done');
+      filtered = todos.filter((t) => !t.completed);
     } else if (activeTodoFilter === 'completed') {
-      filtered = todos.filter((t) => t.completed || t.lane === 'done');
+      filtered = todos.filter((t) => t.completed);
     }
 
     if (listEl) {
       if (filtered.length === 0) {
         listEl.innerHTML = `
           <div class="todo-empty-state">
-            <span>🎉 No tasks found under "${escapeHtml(activeTodoFilter)}" filter.</span>
+            <span>🎉 No tasks found under "${activeTodoFilter}" filter.</span>
           </div>
         `;
       } else {
@@ -1812,18 +1448,17 @@
 
         listEl.innerHTML = filtered
           .map((item) => {
-            const isDone = item.completed || item.lane === 'done';
             const cat = catBadges[item.category] || { icon: '🎯', name: 'Milestone' };
             return `
-              <div class="todo-item ${isDone ? 'completed' : ''}" data-task-id="${item.id}">
+              <div class="todo-item ${item.completed ? 'completed' : ''}" data-task-id="${item.id}">
                 <div class="todo-item-left">
-                  <div class="todo-checkbox ${isDone ? 'checked' : ''}" data-check-id="${item.id}" title="Click to mark complete">
-                    ${isDone ? '✓' : ''}
+                  <div class="todo-checkbox" data-check-id="${item.id}" title="Click to mark complete">
+                    ${item.completed ? '✓' : ''}
                   </div>
                   <div class="todo-item-content">
-                    <span class="todo-item-text">${escapeHtml(item.title || item.text)}</span>
+                    <span class="todo-item-text">${item.text}</span>
                     <div class="todo-item-meta">
-                      <span class="todo-day-tag">${escapeHtml(item.dayLabel || 'Day 1')}</span>
+                      <span class="todo-day-tag">${item.dayLabel || 'Day 1'}</span>
                       <span class="todo-cat-tag">${cat.icon} ${cat.name}</span>
                     </div>
                   </div>
@@ -1836,6 +1471,7 @@
           })
           .join('');
 
+        // Attach events
         listEl.querySelectorAll('.todo-checkbox').forEach((chk) => {
           chk.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -1861,9 +1497,6 @@
         });
       }
     }
-
-    // 4. Ensure active view tab & containers reflect currentTodoView
-    setTodoView(currentTodoView);
   }
 
   // Render Organized Schedules Hub Card Grid
@@ -2311,16 +1944,7 @@
       btnHubCreateNew.addEventListener('click', startNewScheduleCreation);
     }
 
-    // 3. To-Do View Switcher Tabs (Board, List, Roadmap)
-    const viewTabs = document.querySelectorAll('.todo-view-tab');
-    viewTabs.forEach((tab) => {
-      tab.addEventListener('click', () => {
-        const targetView = tab.getAttribute('data-view') || 'board';
-        setTodoView(targetView);
-      });
-    });
-
-    // 4. To-Do Filter Pills
+    // 3. To-Do Filter Pills
     const filterPills = document.querySelectorAll('.todo-filter-btn');
     filterPills.forEach((btn) => {
       btn.addEventListener('click', () => {

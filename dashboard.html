@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/dashboard.css">
   <link rel="stylesheet" href="css/conductor-theme.css">
+  <link rel="stylesheet" href="css/copilot-chat.css">
   <link rel="icon" type="image/png" href="assets/logo.png">
 </head>
 <body class="dashboard-body">
@@ -502,30 +503,14 @@
           <span class="todo-xp-reward-hint">⚡ +15 XP rewarded for every completed task!</span>
         </div>
 
-        <!-- Controls Row: View Switcher Tabs, Filter Pills & Add Form -->
+        <!-- Controls Row: Filter Pills & Add Form -->
         <div class="todo-controls-row">
-          <!-- CollectUI Segmented View Switcher: Board, List, Roadmap -->
-          <div class="todo-view-switcher" id="todo-view-switcher">
-            <button type="button" class="todo-view-tab active" data-view="board" id="tab-view-board" title="Switch to Kanban Board View">
-              <span class="view-tab-icon">📌</span>
-              <span>Board</span>
-            </button>
-            <button type="button" class="todo-view-tab" data-view="list" id="tab-view-list" title="Switch to Linear Checklist View">
-              <span class="view-tab-icon">📋</span>
-              <span>List</span>
-            </button>
-            <button type="button" class="todo-view-tab" data-view="roadmap" id="tab-view-roadmap" title="Switch to Day-by-Day Roadmap View">
-              <span class="view-tab-icon">🗓️</span>
-              <span>Roadmap</span>
-            </button>
-          </div>
-
           <!-- Filter Pills -->
           <div class="todo-filter-pills" id="todo-filter-pills">
             <button type="button" class="todo-filter-btn active" data-filter="all">All (<span id="todo-count-all">0</span>)</button>
             <button type="button" class="todo-filter-btn" data-filter="today">Today (<span id="todo-count-today">0</span>)</button>
             <button type="button" class="todo-filter-btn" data-filter="pending">Pending (<span id="todo-count-pending">0</span>)</button>
-            <button type="button" class="todo-filter-btn" data-filter="completed">Mastered (<span id="todo-count-completed">0</span>)</button>
+            <button type="button" class="todo-filter-btn" data-filter="completed">Completed (<span id="todo-count-completed">0</span>)</button>
           </div>
 
           <!-- Add Custom Task Form -->
@@ -535,58 +520,8 @@
           </form>
         </div>
 
-        <!-- 1. Interactive Kanban Board View (CollectUI Multi-Column Style) -->
-        <div class="todo-kanban-board" id="todo-board-view">
-          <!-- Column 1: To Do -->
-          <div class="kanban-column" id="col-todo" data-lane="todo">
-            <div class="kanban-column-header">
-              <div class="kanban-header-left">
-                <span class="kanban-col-icon">🎯</span>
-                <span class="kanban-col-title">To Do</span>
-              </div>
-              <span class="kanban-count-pill" id="badge-todo-count">0</span>
-            </div>
-            <div class="kanban-lane-dropzone" id="lane-todo" data-lane="todo">
-              <!-- Dynamically injected cards -->
-            </div>
-          </div>
-
-          <!-- Column 2: Doing -->
-          <div class="kanban-column" id="col-doing" data-lane="doing">
-            <div class="kanban-column-header">
-              <div class="kanban-header-left">
-                <span class="kanban-col-icon">⚡</span>
-                <span class="kanban-col-title">Doing</span>
-              </div>
-              <span class="kanban-count-pill" id="badge-doing-count">0</span>
-            </div>
-            <div class="kanban-lane-dropzone" id="lane-doing" data-lane="doing">
-              <!-- Dynamically injected cards -->
-            </div>
-          </div>
-
-          <!-- Column 3: Mastered / Done -->
-          <div class="kanban-column" id="col-done" data-lane="done">
-            <div class="kanban-column-header">
-              <div class="kanban-header-left">
-                <span class="kanban-col-icon">🏆</span>
-                <span class="kanban-col-title">Mastered</span>
-              </div>
-              <span class="kanban-count-pill" id="badge-done-count">0</span>
-            </div>
-            <div class="kanban-lane-dropzone" id="lane-done" data-lane="done">
-              <!-- Dynamically injected cards -->
-            </div>
-          </div>
-        </div>
-
-        <!-- 2. Linear Checklist View (Alternative View) -->
-        <div class="todo-items-list" id="todo-items-list" style="display: none;">
-          <!-- Dynamically populated by dashboard.js -->
-        </div>
-
-        <!-- 3. Day Roadmap View (Alternative View) -->
-        <div class="todo-roadmap-view" id="todo-roadmap-view" style="display: none;">
+        <!-- Linear Checklist View -->
+        <div class="todo-items-list" id="todo-items-list">
           <!-- Dynamically populated by dashboard.js -->
         </div>
       </div>
@@ -1023,6 +958,7 @@
   <script src="js/dashboard.js"></script>
   <script src="js/nav-course-selector.js"></script>
   <script src="js/conductor-footer.js"></script>
+  <script src="js/copilot-chat.js"></script>
 </body>
 </html>
 

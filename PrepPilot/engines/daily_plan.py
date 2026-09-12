@@ -76,7 +76,12 @@ class DailyPlanEngine:
             if current_date > end_date:
                 break
                 
-            daily_plan = self._create_daily_plan(current_date, day_topics)
+            # Extract Topic objects from dicts if needed
+            topic_objects = [
+                item['topic'] if isinstance(item, dict) else item
+                for item in day_topics
+            ]
+            daily_plan = self._create_daily_plan(current_date, topic_objects)
             daily_plans.append(daily_plan)
             current_date += timedelta(days=1)
         
@@ -141,13 +146,16 @@ class DailyPlanEngine:
             # Find days with available time
             while allocated_minutes > 0 and day_idx < total_days:
                 day_used = sum(
-                    self.DEFAULT_BLOCK_DURATIONS.get(b['block_type'], 60)
+                    self.DEFAULT_BLOCK_DURATIONS.get(b.get('block_type', 'learn'), 60)
                     for b in daily_schedule[day_idx]
                 )
                 available = daily_minutes - day_used
                 
                 if available >= 30:  # Minimum block size
-                    daily_schedule[day_idx].append(topic)
+                    daily_schedule[day_idx].append({
+                        'topic': topic,
+                        'block_type': 'learn',  # Initial block type
+                    })
                     allocated_minutes -= min(available, allocated_minutes)
                 else:
                     day_idx += 1

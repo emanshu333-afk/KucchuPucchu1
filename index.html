@@ -5,14 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PrepPilot | Master CBSE, ICSE, JEE & NEET Smarter</title>
   <meta name="description" content="PrepPilot: Next-generation motion-powered learning for CBSE & ICSE (Classes 6th–10th) and 11th, 12th & Dropper competitive exam prep.">
-
+  
   <!-- Modern Typography (Editorial Serif & Sans) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+  
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/conductor-theme.css">
+  <link rel="stylesheet" href="css/copilot-chat.css">
   <link rel="icon" type="image/png" href="assets/logo.png">
 </head>
 <body>
@@ -85,10 +86,11 @@
         <ul class="nav-links-row">
           <li><a href="#curriculum" class="nav-link">Curriculum</a></li>
           <li><a href="#auth-cockpit" class="nav-link">Simulator</a></li>
+          <li><a href="#auth-cockpit" class="nav-link">Sign In</a></li>
         </ul>
 
         <div>
-          <a href="dashboard.html" class="btn-nav-action" title="Open Student Cockpit">
+          <a href="#auth-cockpit" class="btn-nav-action" title="Open Student Cockpit">
             Enter Cockpit →
           </a>
         </div>
@@ -97,7 +99,7 @@
 
     <!-- Main Hero Section (Layout & Composition matching Reference Video) -->
     <main class="hero-wrapper">
-
+      
       <!-- Social Proof Pill Badge -->
       <div class="social-proof-pill">
         <div class="avatar-stack">
@@ -120,7 +122,7 @@
 
       <!-- 1-Click Social Login Buttons (Google, GitHub, Twitter) Styled as Store Pills -->
       <div class="social-login-row" id="auth-buttons">
-
+        
         <!-- Google Sign-In -->
         <button type="button" class="btn-store-style" data-provider="google" title="Sign in with Google">
           <span class="btn-store-icon">
@@ -140,7 +142,7 @@
         <!-- GitHub Sign-In -->
         <button type="button" class="btn-store-style" data-provider="github" title="Sign in with GitHub">
           <span class="btn-store-icon">
-            <svg viewBox="0 0 24 24" fill="#ffffff">
+            <svg viewBox="0 0 24 24" fill="currentColor">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
             </svg>
           </span>
@@ -153,7 +155,7 @@
         <!-- Twitter / X Sign-In -->
         <button type="button" class="btn-store-style" data-provider="twitter" title="Sign in with Twitter / X">
           <span class="btn-store-icon">
-            <svg viewBox="0 0 24 24" fill="#ffffff">
+            <svg viewBox="0 0 24 24" fill="currentColor">
               <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
             </svg>
           </span>
@@ -167,7 +169,7 @@
 
       <!-- Centerpiece Character & Curved Orbital Track (Identical to Reference!) -->
       <section class="mascot-stage" aria-label="Interactive Mascot Showcase">
-
+        
         <!-- Curved Dotted Orbital Trajectory -->
         <svg class="orbital-arc-canvas" viewBox="0 0 1000 360" fill="none">
           <path d="M 60 300 Q 500 -20 940 300" stroke="rgba(99, 102, 241, 0.22)" stroke-width="2.5" stroke-dasharray="8 8" />
@@ -203,7 +205,7 @@
         <div class="mascot-character-container glow-junior" id="mascot-container">
           <!-- Glowing Aura Behind Illuminated Book -->
           <div class="mascot-book-glow"></div>
-
+          
           <!-- Stardust Specks Floating Upwards -->
           <div class="floating-stardust dust-1">✦</div>
           <div class="floating-stardust dust-2">✦</div>
@@ -219,7 +221,7 @@
 
             <!-- Interactive Kid Rig: Eyes, Book, Hands, Head & Sneakers -->
             <div class="kid-interactive-rig" id="kid-interactive-rig">
-
+              
 
               <!-- 2. Interactive Head & Glasses Zone -->
               <div class="kid-head-target" id="kid-head-zone" title="Tap head for Brainpower Focus Boost!">
@@ -324,7 +326,7 @@
             <!-- GitHub -->
             <button type="button" class="btn-social-item btn-social-github" data-provider="github">
               <span class="btn-social-icon">
-                <svg viewBox="0 0 24 24" fill="#ffffff">
+                <svg viewBox="0 0 24 24" fill="currentColor">
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
                 </svg>
               </span>
@@ -334,7 +336,7 @@
             <!-- Twitter / X -->
             <button type="button" class="btn-social-item btn-social-twitter" data-provider="twitter">
               <span class="btn-social-icon">
-                <svg viewBox="0 0 24 24" fill="#ffffff">
+                <svg viewBox="0 0 24 24" fill="currentColor">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                 </svg>
               </span>
@@ -483,7 +485,7 @@
       <div class="conductor-cta-inner">
         <h2 class="conductor-serif-heading">Ready to launch your first test flight?</h2>
         <p class="conductor-subtext">Get started free. All academic classes &amp; competitive tracks included.</p>
-        <a href="#auth-cockpit" class="btn-conductor-pill" data-provider="google" title="Enter Student Cockpit">
+        <a href="#auth-cockpit" class="btn-conductor-pill" title="Enter Student Cockpit">
           Launch Cockpit →
         </a>
       </div>
@@ -493,7 +495,7 @@
     <div class="auth-modal-overlay" id="auth-modal" role="dialog" aria-modal="true">
       <div class="auth-modal-box">
         <button type="button" class="modal-close-btn" id="modal-close-btn" aria-label="Close">✕</button>
-
+        
         <div class="modal-icon-orbit">
           <div class="modal-spinner"></div>
           <div id="modal-provider-icon" class="modal-provider-icon"></div>
@@ -533,7 +535,7 @@
     <footer class="conductor-footer" id="conductor-footer">
       <div class="conductor-footer-inner">
         <div class="conductor-footer-grid">
-
+          
           <!-- Left Column: Brand & Interactive Newsletter -->
           <div class="footer-brand-pane">
             <a href="#" class="conductor-brand-wrap" title="PrepPilot">
@@ -544,7 +546,7 @@
               </div>
               <span class="conductor-brand-name">PrepPilot</span>
             </a>
-
+            
             <p class="conductor-brand-tagline">
               The modern cockpit for competitive exams &amp; board mastery.
             </p>
@@ -555,12 +557,12 @@
               </p>
 
               <form class="footer-pill-input-wrap" id="conductor-newsletter-form">
-                <input
-                  type="email"
-                  class="footer-email-input"
-                  id="conductor-newsletter-email"
-                  placeholder="Your email"
-                  required
+                <input 
+                  type="email" 
+                  class="footer-email-input" 
+                  id="conductor-newsletter-email" 
+                  placeholder="Your email" 
+                  required 
                   aria-label="Email address for weekly dispatch"
                 >
                 <button type="submit" class="btn-newsletter-submit" id="btn-newsletter-submit">
@@ -579,7 +581,7 @@
 
           <!-- Right Column: 3-Column Navigation Directory -->
           <div class="footer-cols-grid">
-
+            
             <!-- Column 1: Curriculum -->
             <div class="footer-nav-col">
               <h4 class="footer-nav-col-title">Curriculum</h4>
@@ -654,5 +656,6 @@
   <script src="js/auth-portal.js"></script>
   <script src="js/nav-course-selector.js"></script>
   <script src="js/conductor-footer.js"></script>
+  <script src="js/copilot-chat.js"></script>
 </body>
 </html>

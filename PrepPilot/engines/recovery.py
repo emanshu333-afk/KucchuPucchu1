@@ -59,7 +59,9 @@ class RecoveryEngine:
             for block in blocks:
                 if block.status == 'completed':
                     completed_blocks += 1
-                    total_completed_hours += block.actual_duration or block.planned_duration
+                    # Convert minutes to hours
+                    duration_minutes = block.actual_duration or block.planned_duration
+                    total_completed_hours += duration_minutes / 60.0
                     if block.topic:
                         topic_id = str(block.topic.id)
                         if topic_id not in topic_completion:

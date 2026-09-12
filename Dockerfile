@@ -29,7 +29,7 @@ FROM python:3.11-slim
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    DJANGO_SETTINGS_MODULE=config.settings.production
+    DJANGO_SETTINGS_MODULE=code_flux.settings.production
 
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -58,7 +58,7 @@ RUN mkdir -p /app/staticfiles /app/media /app/logs && \
 USER appuser
 
 # Collect static files
-RUN python manage.py collectstatic --noinput --settings=config.settings.production
+RUN python manage.py collectstatic --noinput --settings=code_flux.settings.production
 
 # Expose port
 EXPOSE 8000
@@ -68,4 +68,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD python manage.py check --deploy || exit 1
 
 # Default command
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3", "--timeout", "120"]
+CMD ["gunicorn", "code_flux.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3", "--timeout", "120"]

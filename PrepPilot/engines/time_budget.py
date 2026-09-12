@@ -4,7 +4,7 @@ Time Budget Engine - Allocates study time as a limited resource across subjects 
 import logging
 from decimal import Decimal
 from typing import Dict, List, Any
-from django.db.models import QuerySet, Sum
+from django.db.models import QuerySet, Sum, Avg
 
 from PrepPilot.models import Exam, Subject, Topic, User
 
@@ -69,7 +69,7 @@ class TimeBudgetEngine:
             
             # Topic complexity factor
             topics = Topic.objects.filter(subject=subject)
-            avg_difficulty = topics.aggregate(avg=models.Avg('difficulty'))['avg'] or 3
+            avg_difficulty = topics.aggregate(avg=Avg('difficulty'))['avg'] or 3
             difficulty_factor = avg_difficulty / 5  # Normalize to 0-1
             
             # Combined weight

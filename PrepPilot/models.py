@@ -279,23 +279,23 @@ class Topic(models.Model):
     
     def calculate_priority(self):
         """Calculate priority based on importance, weakness, weightage, and time."""
-        # Priority factors
-        importance_weight = {'critical': 40, 'high': 30, 'medium': 20, 'low': 10}
-        difficulty_weight = {1: 5, 2: 10, 3: 15, 4: 20, 5: 25}
+        # Priority factors - scaled 0-100
+        importance_weight = {'critical': 100, 'high': 75, 'medium': 50, 'low': 25}
+        difficulty_weight = {1: 10, 2: 25, 3: 50, 4: 75, 5: 100}
         
-        importance_score = importance_weight.get(self.importance, 20)
+        importance_score = importance_weight.get(self.importance, 50)
         weakness_score = 100 - self.current_level
-        weightage_score = min(float(self.weightage) * 2, 30)
-        difficulty_score = difficulty_weight.get(self.difficulty, 15)
-        time_factor = min(float(self.estimated_hours) / 10 * 10, 15)
+        weightage_score = min(float(self.weightage) * 5, 100)
+        difficulty_score = difficulty_weight.get(self.difficulty, 50)
+        time_factor = min(float(self.estimated_hours) / 10 * 100, 100)
         
-        # Normalize and combine
+        # Weighted combination
         total_score = (
-            importance_score * 0.3 +
-            weakness_score * 0.25 +
-            weightage_score * 0.2 +
-            difficulty_score * 0.15 +
-            time_factor * 0.1
+            importance_score * 0.35 +
+            weakness_score * 0.30 +
+            weightage_score * 0.15 +
+            difficulty_score * 0.10 +
+            time_factor * 0.10
         )
         
         self.priority_score = round(total_score, 2)
@@ -749,3 +749,106 @@ class Notification(models.Model):
     
     def __str__(self):
         return f"{self.user.username} - {self.title}"
+
+
+class StudyResourceVault(models.Model):
+    """Personal vault where a student stores PDFs or links.
+
+    A vault item is private by default. The student can publish it,
+    which makes it visible to other students as a shared study
+    resource. The on-screen assistant can also publish an item on
+    the student's behalf through the publish API action.
+    """
+
+    SOURCE_TYPES = [
+        ('pdf', 'PDF upload'),
+        ('link', 'Web link'),
+    ]
+
+    id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False
+    )
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='vault_items'
+    )
+    title = models.CharField(max_length=300)
+    description = models.TextField(blank=True)
+    source_type = models.CharField(
+        max_length=10, choices=SOURCE_TYPES, default='link'
+    )
+    link_url = models.URLField(blank=True)
+    pdf_file = models.FileField(
+        upload_to='vault/%Y/%m/', null=True, blank=True
+    )
+    subject_name = models.CharField(max_length=100, blank=True)
+    topic_name = models.CharField(max_length=200, blank=True)
+    related_topic = models.ForeignKey(
+        Topic, on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='vault_items'
+    )
+    is_published = models.BooleanField(default=False)
+    published_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'study_resource_vault'
+        verbose_name = _('Study Resource Vault Item')
+        verbose_name_plural = _('Study Resource Vault Items')
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['owner', 'is_published']),
+            models.Index(fields=['is_published', 'created_at']),
+        ]
+
+    def __str__(self):
+        state = 'published' if self.is_published else 'private'
+        return f"{self.owner.username} - {self.title} ({state})"
+
+    def clean(self):
+        from django.core.exceptions import ValidationError
+
+        if self.source_type == 'link' and not self.link_url:
+            raise ValidationError(
+                {'link_url': 'A web link is required for link items.'}
+            )
+        if self.source_type == 'pdf' and not self.pdf_file:
+            raise ValidationError(
+                {'pdf_file': 'A PDF file is required for pdf items.'}
+            )
+
+    def publish(self):
+        from django.utils import timezone as tz
+
+        self.is_published = True
+        self.published_at = tz.now()
+        self.save(update_fields=['is_published', 'published_at'])
+
+    def unpublish(self):
+        self.is_published = False
+        self.published_at = None
+        self.save(update_fields=['is_published', 'published_at'])
+
+
+class AssistantConversation(models.Model):
+    """Stored AI assistant exchange for precise grounded answers."""
+
+    id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False
+    )
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='assistant_chats'
+    )
+    question = models.TextField()
+    answer = models.TextField()
+    sources = models.JSONField(default=list, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'assistant_conversations'
+        verbose_name = _('Assistant Conversation')
+        verbose_name_plural = _('Assistant Conversations')
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.user.username}: {self.question[:60]}"

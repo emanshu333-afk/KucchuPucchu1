@@ -80,6 +80,7 @@ class ReadinessEngine:
             'mock_performance': mock_performance,
             'revision_frequency': revision_frequency,
             'weak_areas_penalty': weak_areas_penalty,
+            'time_pressure_factor': time_pressure_factor,
         })
         
         # Save to database
